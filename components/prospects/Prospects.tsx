@@ -1,0 +1,21 @@
+import styles from './Prospects.module.css'
+
+export default function Prospects() {
+  return (
+    <div className="nocard">
+      <h1>
+<svg class="underline" width="344" height="36" viewBox="0 5 550 10" fill="none">
+  <path opacity="0.5" stroke-width="30" stroke-linejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
+</svg>
+        What I Like to Work On
+      </h1>
+      <p>
+        In terms of tools, I am at home with <strong>Python</strong>. I also really enjoy working
+        with <strong>React</strong>. I have done a number of projects in Java and C, and enjoy
+        playing around in assembly sometimes.
+      </p>
+      <p>I love working on space systems. I am also passionate about conservation.</p>
+      </div>
+
+  )
+}
