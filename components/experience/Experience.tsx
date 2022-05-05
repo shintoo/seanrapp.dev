@@ -42,7 +42,7 @@ export default function Experience() {
         users import recent birdwatching lists or other nature-y observations.
         It is my favorite thing I have ever made. It even has a <Flink href="https://github.com/shintoo/darwin-browser-extension">browser extension</Flink>!
       </p>
-      <a className={styles.darwincontainer} href="https://darwintree.app/b/Common_Florida_Birds-1hG-2vpp-1hW-hzM-17O-3-28ak-Yv-2mv-1SX-28J" target="_blank" rel="norefferer"><img src="/darwin.png" className={styles.darwin} alt="https://darwintree.app" /></a>
+      <a className={styles.darwincontainer} href="https://darwintree.app/b/Common_Florida_Birds-1hG-2vpp-1hW-hzM-17O-3-28ak-Yv-2mv-1SX-28J" target="_blank" rel="noreferrer"><img src="/darwin.png" className={styles.darwin} alt="https://darwintree.app" /></a>
       <p>Most of my projects are up for viewing on my <Flink href="https://github.com/shintoo">GitHub</Flink>.</p>
     </div>
   )
