@@ -15,7 +15,19 @@ export default function Prospects() {
         playing around in assembly sometimes.
       </p>
       <p>I love working on space systems. I am also passionate about conservation.</p>
+      <div className={styles.container}>
+      <a href="mailto:seanprapp@gmail.com" target="_blank" rel="noopener noreferrer">
+        <div className={styles.button1}>
+          email me
+        </div>
+      </a>
+      <a href="/resume-05-04-2022.pdf" target="_blank" rel="noopener noreferrer">
+        <div className={styles.button2}>
+          download cv
+        </div>
+      </a>
       </div>
+    </div>
 
   )
 }
