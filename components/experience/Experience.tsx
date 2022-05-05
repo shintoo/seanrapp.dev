@@ -5,7 +5,7 @@ export default function Experience() {
   return (
     <div id="experience" className="nocard">
       <h1>
-<svg class="underline" width="344" height="36" viewBox="0 5 610 10" fill="none">
+<svg className="underline" width="344" height="36" viewBox="0 5 610 10" fill="none">
   <path opacity="0.5" stroke-width="30" stroke-linejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
 </svg>
 
@@ -29,7 +29,7 @@ export default function Experience() {
       </p>
       <h1 id="projects">
       
-<svg class="underline" width="344" height="36" viewBox="0 5 500 10" fill="none">
+<svg className="underline" width="344" height="36" viewBox="0 5 500 10" fill="none">
   <path opacity="0.5" stroke-width="30" stroke-linejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
 </svg>
       What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
