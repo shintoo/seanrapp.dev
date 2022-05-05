@@ -3,7 +3,7 @@ import Flink from '../flink/Flink'
 
 export default function Experience() {
   return (
-    <div className="nocard">
+    <div id="experience" className="nocard">
       <h1>
 <svg class="underline" width="344" height="36" viewBox="0 5 610 10" fill="none">
   <path opacity="0.5" stroke-width="30" stroke-linejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
@@ -27,21 +27,22 @@ export default function Experience() {
         In the past, I have spent some time at Lockheed Martin,
         working on a training simulator for the Hawk T2 jet trainer.
       </p>
-      <h1>
+      <h1 id="projects">
       
 <svg class="underline" width="344" height="36" viewBox="0 5 500 10" fill="none">
   <path opacity="0.5" stroke-width="30" stroke-linejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
 </svg>
       What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
       <p>
-        The last project I started was&nbsp;
-        <Flink href="https://darwintree.app">darwintree.app</Flink>
-        , a webapp for searching biological taxa and building phylogenetic trees. It works with two
+        My latest project is Darwin&nbsp;(
+        <Flink href="https://darwintree.app">darwintree.app</Flink>),
+        a webapp for searching biological taxa and building phylogenetic trees. It works with two
         of my favorite sites/apps,
         eBird and iNaturalist, letting
         users import recent birdwatching lists or other nature-y observations.
         It is my favorite thing I have ever made. It even has a <Flink href="https://github.com/shintoo/darwin-browser-extension">browser extension</Flink>!
       </p>
+      <a className={styles.darwincontainer} href="https://darwintree.app/b/Common_Florida_Birds-1hG-2vpp-1hW-hzM-17O-3-28ak-Yv-2mv-1SX-28J" target="_blank" referrer="norefferer"><img src="/darwin.png" className={styles.darwin} alt="https://darwintree.app" /></a>
       <p>Most of my projects are up for viewing on my <Flink href="https://github.com/shintoo">GitHub</Flink>.</p>
     </div>
   )

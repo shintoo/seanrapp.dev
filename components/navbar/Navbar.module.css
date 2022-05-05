@@ -1,0 +1,54 @@
+.navbar {
+  z-index: 1000;
+  padding: 1rem .5rem 1rem .5rem;
+  background: white;
+  margin: 0;
+  color: black;
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+}
+
+.logo {
+  margin-left: .5rem;
+  font-size: 1.3rem;
+  margin-right: auto;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.navlink {
+  margin-right: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + main {
+  padding-top: 50px;
+}
+
+.highlight {
+  color: #0f0;
+}
+
+@media only screen and (min-width: 680px) {
+  .navbar {
+    padding: 1rem .5rem 1rem .5rem;
+  }
+
+  .logo {
+    margin-left: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .navlink {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+  }
+}
