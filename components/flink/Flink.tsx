@@ -5,7 +5,7 @@ type Props = {
 
 export default function Flink(props: Props) {
   return (
-    <a href={props.href} target="_blank" referrer="noreferrer">
+    <a href={props.href} target="_blank" rel="noreferrer">
       <span style={{textDecoration: "underline"}}>
         {props.children}
       </span>
