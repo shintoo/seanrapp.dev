@@ -23,9 +23,27 @@ export default function Experience() {
         It is primarily development in Python, with tools such as GitLab CI/CD,
         VMWare vCenter, and PostgreSQL, amongst others.
       </p>
+      <div className={styles.imagerow}>
+        <img src="/sls.jpg" className={styles.circleimage} alt="SLS" />
+        <img src="/orion.jpg" className={styles.circleimage} alt="Orion" />
+        <img src="/icps.jpg" className={styles.circleimage} alt="ICPS" />
+      </div>
+      <hr className={styles.divider}/>
       <p>
-        In the past, I have spent some time at Lockheed Martin,
-        working on a training simulator for the Hawk T2 jet trainer.
+        Previously, I have worked with <i>Swamp Works</i>, a rapid development lab
+        at Kennedy Space Center,
+        working on a regolith-mining rover. This rover has a goal of collecting
+        materials for habitat building,
+        rocket propellant production, or tool manufacturing. I contributed to
+        simulations development, deployment pipelines, and networking.
+      </p>
+      <div className={styles.imagerow}>
+        <img src="/rassor1.jpg" className={styles.circleimage} alt="Rassor" />
+        <img src="/rassor2.jpg" className={styles.circleimage} alt="Rassor" />
+      </div>
+      <p>
+        I have also spent some time
+        working on a training simulator for the Hawk T2 jet trainer with Lockheed Martin.
       </p>
       <h1 id="projects">
       
