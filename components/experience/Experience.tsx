@@ -52,7 +52,7 @@ export default function Experience() {
 </svg>
       What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
       <p>
-        My latest project is Darwin&nbsp;(
+        My latest project is Darwin (
         <Flink href="https://darwintree.app">darwintree.app</Flink>),
         a webapp for searching biological taxa and building phylogenetic trees. It works with two
         of my favorite sites/apps,
