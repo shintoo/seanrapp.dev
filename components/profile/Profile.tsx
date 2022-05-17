@@ -16,7 +16,7 @@ export default function Profile() {
     { skill: "Docker", color: "#2392E6" },
     { skill: "PostgreSQL",  color: "#336791" }
   ].map(s =>
-    <span style={{background: s.color}}>{s.skill}</span>
+    <span key={s.skill} style={{background: s.color}}>{s.skill}</span>
   )
 
   return (
