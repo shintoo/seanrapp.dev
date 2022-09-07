@@ -51,7 +51,7 @@ export default function Experience() {
   <path opacity="0.5" strokeWidth="30" strokeLinejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
 </svg>
       What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
-      <p>I am currently working on a super secret, spaced-repitition wildlife identification learning tool with auto-generated card decks.
+      <p>I am currently working on a super secret, spaced-repetition wildlife identification learning tool with auto-generated card decks.
         (Think &quot;I want to be able to identify all of the birds found in Florida during the spring.&quot;) More to come on that soon ;)
       </p>
       <p>
