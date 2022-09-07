@@ -12,7 +12,7 @@ export default function Prospects() {
       <p>
         In terms of tools, I am at home with <strong>Python</strong>. I also really enjoy working
         with <strong>React</strong>. I have done a number of projects in Java and C, and enjoy
-        playing around in assembly sometimes.
+        playing around in assembly sometimes. I am at home in a Linux environment.
       </p>
       <p>I love working on space systems. I am also passionate about conservation.</p>
       <div className={styles.container}>
