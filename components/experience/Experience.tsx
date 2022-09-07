@@ -16,12 +16,12 @@ export default function Experience() {
       </p>
       <img src="/lcc-ft-me.png" className={styles.vab} alt="Pic of me nbd" />
       <p>
-        My work has included <strong>automating simulator testing</strong>,
+        My work has included developing an <strong>automation dashboard</strong>,
         creating a telemetry packing <strong>database</strong> generator,
         improving simulator <strong>performance</strong>,
         implementing new simulator functionality, and plenty other I&apos;m forgetting.
-        It is primarily development in Python, with tools such as GitLab CI/CD,
-        VMWare vCenter, and PostgreSQL, amongst others.
+        It is primarily development in Python and TypeScript, with tools such as GitLab CI/CD,
+        VMWare vCenter, NextJs, FastAPI, Ansible, and PostgreSQL, amongst others.
       </p>
       <div className={styles.imagerow}>
         <img src="/sls.jpg" className={styles.circleimage} alt="SLS" />
@@ -51,6 +51,9 @@ export default function Experience() {
   <path opacity="0.5" strokeWidth="30" strokeLinejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
 </svg>
       What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
+      <p>I am currently working on a super secret, spaced-repitition wildlife identification learning tool with auto-generated card decks.
+        (Think &quot;I want to be able to identify all of the birds found in Florida during the spring.&quot;) More to come on that soon ;)
+      </p>
       <p>
         My latest project is Darwin (
         <Flink href="https://darwintree.app">darwintree.app</Flink>),
