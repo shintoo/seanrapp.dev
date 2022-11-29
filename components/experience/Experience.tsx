@@ -17,9 +17,9 @@ export default function Experience() {
       <img src="/lcc-ft-me.png" className={styles.vab} alt="Pic of me nbd" />
       <p>
         My work has included developing an <strong>automation dashboard</strong>,
-        creating a telemetry packing <strong>database</strong> generator,
-        improving simulator <strong>performance</strong>,
-        implementing new simulator functionality, and plenty other I&apos;m forgetting.
+        creating a telemetry <strong>database</strong> management system and tools,
+        improving data simulation <strong>performance</strong> and functionality,
+        and plenty other I&apos;m forgetting.
         It is primarily development in Python and TypeScript, with tools such as GitLab CI/CD,
         VMWare vCenter, NextJs, FastAPI, Ansible, and PostgreSQL, amongst others.
       </p>
