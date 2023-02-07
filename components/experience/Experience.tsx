@@ -23,7 +23,7 @@ export default function Experience() {
       <hr className={styles.divider}/>
       <p>
         Until the start of 2023, I worked in a lab in the Launch Control Center at Kennedy Space Center that provides
-        vehicle telemetry simulation as a service.
+        vehicle telemetry simulation for the Space Launch System and Orion spacecraft, supporting the Artemis program.
       </p>
       <img src="/lcc-ft-me.png" className={styles.vab} alt="Pic of me nbd" />
       <p>
