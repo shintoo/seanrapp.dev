@@ -11,17 +11,26 @@ export default function Experience() {
 
       What I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[professionally]</span></h1>
       <p>
-        Since 2019, I have worked in a lab in the Launch Control Center that provides
+        Since the start of 2023, I have been working at STScI as a software engineer, developing internal tools
+        used by astronomers and engineers to run calibration pipelines on data from the Hubble Space Telescope and the James Webb Space Telescope.
+      </p>
+      <div className={styles.imagerow}>
+        <img src="/hubble.jpg" className={styles.circleimage} alt="Hubble" />
+        <img src="/jwst.jpg" className={styles.circleimage} alt="JWST" />
+        <img src="/jwst-carina.png" className={styles.circleimage} alt="Carina Nebula" />
+      </div>
+
+      <hr className={styles.divider}/>
+      <p>
+        Until the start of 2023, I worked in a lab in the Launch Control Center at Kennedy Space Center that provides
         vehicle telemetry simulation as a service.
       </p>
       <img src="/lcc-ft-me.png" className={styles.vab} alt="Pic of me nbd" />
       <p>
-        My work has included developing an <strong>automation dashboard</strong>,
-        creating a telemetry <strong>database</strong> management system and tools,
-        improving data simulation <strong>performance</strong> and functionality,
-        and plenty other I&apos;m forgetting.
-        It is primarily development in Python and TypeScript, with tools such as GitLab CI/CD,
-        VMWare vCenter, NextJs, FastAPI, Ansible, and PostgreSQL, amongst others.
+        My work included developing an automation dashboard,
+        creating a telemetry database management system and tools,
+        improving data simulation performance and functionality,
+        and lots of other fun projects.
       </p>
       <div className={styles.imagerow}>
         <img src="/sls.jpg" className={styles.circleimage} alt="SLS" />
@@ -30,7 +39,7 @@ export default function Experience() {
       </div>
       <hr className={styles.divider}/>
       <p>
-        Previously, I have worked with <i>Swamp Works</i>, a rapid development lab
+        I have worked with <i>Swamp Works</i>, a rapid development lab
         at Kennedy Space Center,
         working on a regolith-mining rover. This rover has a goal of collecting
         materials for habitat building,

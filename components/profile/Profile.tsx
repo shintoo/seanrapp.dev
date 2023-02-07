@@ -24,7 +24,7 @@ export default function Profile() {
       <img src="/avatar.jpg" className={styles.avatar} alt="Pic of me nbd" />
       <h1 style={{textAlign: "center", margin: "0"}}>Hi!</h1>
       <p style={{textAlign: "center"}}>
-        I&apos;m Sean, a software engineer at Kennedy Space Center in Florida.
+        I&apos;m Sean, a software engineer at the Space Telescope Science Institute.
       </p>
       <div className={styles.skills}>
         {skills}
