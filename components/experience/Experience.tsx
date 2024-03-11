@@ -11,7 +11,7 @@ export default function Experience() {
 
       What I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[professionally]</span></h1>
       <p>
-        Since Jaunary 2023, I have been working at the <Flink href="https://www.stsci.edu">Space Telescope Science Institute (STScI)</Flink> as a software engineer, developing applications
+        Since January 2023, I have been working at the <Flink href="https://www.stsci.edu">Space Telescope Science Institute (STScI)</Flink> as a software engineer, developing applications
         used by engineers to monitor data calibration and manage data archive systems. I also work on APIs used by astronomers
         to search for and retrieve data from the Hubble Space Telescope and the James Webb Space Telescopes.
         (And soon, the <Flink href="https://roman.gsfc.nasa.gov/">Roman Space Telescope</Flink>!)
