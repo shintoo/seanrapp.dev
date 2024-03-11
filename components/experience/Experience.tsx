@@ -11,8 +11,10 @@ export default function Experience() {
 
       What I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[professionally]</span></h1>
       <p>
-        Since the start of 2023, I have been working at STScI as a software engineer, developing internal tools
-        used by astronomers and engineers to run calibration pipelines on data from the Hubble Space Telescope and the James Webb Space Telescope.
+        Since Jaunary 2023, I have been working at the <Flink href="https://www.stsci.edu">Space Telescope Science Institute (STScI)</Flink> as a software engineer, developing applications
+        used by engineers to monitor data calibration and manage data archive systems. I also work on APIs used by astronomers
+        to search for and retrieve data from the Hubble Space Telescope and the James Webb Space Telescopes.
+        (And soon, the <Flink href="https://roman.gsfc.nasa.gov/">Roman Space Telescope</Flink>!)
       </p>
       <div className={styles.imagerow}>
         <img src="/hubble.jpg" className={styles.circleimage} alt="Hubble" />
@@ -22,15 +24,22 @@ export default function Experience() {
 
       <hr className={styles.divider}/>
       <p>
-        Until the start of 2023, I worked in a lab in the Launch Control Center at Kennedy Space Center that provides
+        Before starting at STScI, I worked in a lab in the Launch Control Center at Kennedy Space Center that provides
         vehicle telemetry simulation for the Space Launch System and Orion spacecraft, supporting the Artemis program.
+        We successfully launched <Flink href="https://www.nasa.gov/mission/artemis-i/">Artemis I</Flink>, and Artemis II
+        is on the way.
       </p>
-      <img src="/lcc-ft-me.png" className={styles.vab} alt="Pic of me nbd" />
+      <img src="/lcc-ft-me.png" className={styles.vab} alt="LCC and VAB" />
       <p>
-        My work included developing an automation dashboard,
-        creating a telemetry database management system and tools,
-        improving data simulation performance and functionality,
-        and lots of other fun projects.
+        The telemetry simulation system I worked on is used to train the launch team, better preparing them for handling
+        any situation that may arise while preparing the rocket and spacecraft for launch. It is also used for testing
+        the Launch Control System and the Ground/Flight Application Software, letting engineers work with simulated
+        rocket and spacecraft data without needing to connect to the real thing.
+      </p>
+      <p>
+        My work particularly included building a database for tracking telemetry and commanding data models,
+        creating an automation dashboard for managing simulation deployments,
+        and maximizing simulation performance.
       </p>
       <div className={styles.imagerow}>
         <img src="/sls.jpg" className={styles.circleimage} alt="SLS" />
@@ -39,7 +48,7 @@ export default function Experience() {
       </div>
       <hr className={styles.divider}/>
       <p>
-        I have worked with <i>Swamp Works</i>, a rapid development lab
+        I have also worked with <i>Swamp Works</i>, a rapid development lab
         at Kennedy Space Center,
         working on a regolith-mining rover. This rover has a goal of collecting
         materials for habitat building,
@@ -54,15 +63,29 @@ export default function Experience() {
         I have also spent some time
         working on a training simulator for the Hawk T2 jet trainer with Lockheed Martin.
       </p>
-      <h1 id="projects">
+
+      <h1 id="volunteering">
       
 <svg className="underline" width="344" height="36" viewBox="0 5 500 10" fill="none">
   <path opacity="0.5" strokeWidth="30" strokeLinejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
 </svg>
-      What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
-      <p>I am currently working on a super secret, spaced-repetition wildlife identification learning tool with auto-generated card decks.
-        (Think &quot;I want to be able to identify all of the birds found in Florida during the spring.&quot;) More to come on that soon ;)
+      Volunteering</h1>
+
+      <p>I currently volunteer <Flink href="https://www.sjastudy.org/">Study Japanese Arlington (SJA)</Flink>,
+        a local non-profit in Arlington, VA that advocates for Japanese study opportunities with Arlington Public Schools.
+        We also host plenty of Japanese cultural and language-learning events! I volunteer as the website maintainer, as well as
+        occasionally leading our weekly Japanese Conversation classes at the Arlington County Central Library.
       </p>
+
+      <div className={styles.imagerow}>
+        <img src="/kaminari-mon.jpg" className={styles.circleimage} alt="Me in Asakusa, Japan" />
+      </div>
+      
+      <h1 id="projects">
+<svg className="underline" width="344" height="36" viewBox="0 5 500 10" fill="none">
+  <path opacity="0.5" strokeWidth="30" strokeLinejoin="round" d="M3 21C20.1231 17.8525 37.9303 16.8192 55.3857 16.0719C84.6481 14.819 114.132 14.5194 143.388 15.9599C169.598 17.2503 195.455 20.3554 221.642 17.7519C228.347 17.0853 237.394 16.9679 244 16.9679"></path>
+</svg>
+      What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
       <p>
         My latest project is Darwin (
         <Flink href="https://darwintree.app">darwintree.app</Flink>),
