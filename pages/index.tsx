@@ -5,7 +5,6 @@ import styles from '../styles/Home.module.css'
 import Navbar from '../components/navbar/Navbar'
 import Profile from '../components/profile/Profile'
 import Experience from '../components/experience/Experience'
-import Prospects from '../components/prospects/Prospects'
 import Footer from '../components/footer/Footer'
 
 const Home: NextPage = () => {
@@ -14,7 +13,6 @@ const Home: NextPage = () => {
       <Navbar />
       <Profile />
       <Experience />
-      <Prospects />
       <Footer />
     </div>
   )
