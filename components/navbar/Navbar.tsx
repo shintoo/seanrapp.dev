@@ -12,7 +12,6 @@ export default function Navbar() {
       <Link href="/"><div className={styles.logo}>./sean</div></Link>
       <Link href="#experience"><div className={[styles.navlink, ].join(" ")}>exp</div></Link>
       <Link href="#projects"><div className={[styles.navlink, ].join(" ")}>proj</div></Link>
-      <Link href="#connect"><div className={[styles.navlink, ].join(" ")}>connect</div></Link>
     </div>
   )
 }
