@@ -71,10 +71,10 @@ export default function Experience() {
 </svg>
       Volunteering</h1>
 
-      <p>I currently volunteer <Flink href="https://www.sjastudy.org/">Study Japanese Arlington (SJA)</Flink>,
+      <p>I serve as a board member and chair of communications at <Flink href="https://www.sjastudy.org/">Study Japanese Arlington (SJA)</Flink>,
         a local non-profit in Arlington, VA that advocates for Japanese study opportunities with Arlington Public Schools.
-        We also host plenty of Japanese cultural and language-learning events! I volunteer as the website maintainer, as well as
-        occasionally leading our weekly Japanese Conversation classes at the Arlington County Central Library.
+        We also host plenty of Japanese cultural and language-learning events around the Washington, DC area. I host weekly Japanese conversation 
+        classes at Arlington County Central Public Library, and serve as the maintainer of our website.
       </p>
 
       <div className={styles.imagerow}>
@@ -87,7 +87,7 @@ export default function Experience() {
 </svg>
       What Else I&apos;m Working On <span style={{fontSize: "1rem", verticalAlign: "super", fontWeight: "normal"}}>[for fun]</span></h1>
       <p>
-        My latest project is Darwin (
+        One project of mine is Darwin (
         <Flink href="https://darwintree.app">darwintree.app</Flink>),
         a webapp for searching biological taxa and building phylogenetic trees. It works with two
         of my favorite sites/apps,
