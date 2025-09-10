@@ -1,0 +1,44 @@
+.faces {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  align-items: start;
+}
+
+.face-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.face-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 5px;
+}
+
+.face-item p {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+td {
+  padding: 10px;
+}
+
+.playbutton {
+  display: inline-block;
+  background-color: #5cb85c;
+  border: 1px solid #4cae4c;
+  color: #fff;
+  line-height: 1.43;
+  text-align: center;
+  font-weight: 400;
+  padding: 1px 4px;
+  min-width: 60px;
+  font-size: 0.85em;
+}
