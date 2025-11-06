@@ -188,9 +188,21 @@ const initSPANavigation = () => {
     }
   });
 
-  // Set active menu item on initial page load
+  // Load content on initial page load
   const currentPath = window.location.pathname;
-  setActiveMenuItem(currentPath);
+  if (!currentPath || currentPath === '/' || currentPath === '/index.html') {
+    // Home page - load home content
+    loadHomePage();
+  } else {
+    // Other pages - fetch and load content
+    loadPage(currentPath).then(() => {
+      setActiveMenuItem(currentPath);
+    }).catch(() => {
+      // If page not found, load home page
+      history.replaceState({ url: '/' }, '', '/');
+      loadHomePage();
+    });
+  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
