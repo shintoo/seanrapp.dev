@@ -89,7 +89,11 @@ const loadPage = async (url) => {
     const newMain = doc.querySelector('.main');
     if (newMain) {
       const currentMain = document.querySelector('.main');
-      currentMain.innerHTML = newMain.innerHTML;
+      currentMain.style.opacity = '0.0';
+      setTimeout(() => {
+        currentMain.innerHTML = newMain.innerHTML;
+        currentMain.style.opacity = '1.0';
+      }, 250);
     }
     return Promise.resolve();
   } catch (error) {

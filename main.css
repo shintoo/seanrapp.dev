@@ -190,9 +190,11 @@ h3 {
   max-width: 750px;
   letter-spacing: 0.25px;
   padding: 2em;
+  opacity: 0.0;
+  transition: opacity 0.25s ease-in;
 }
 
-.side-menu > .item > .icon {
+.side-menu>.item>.icon {
   width: 32px;
   height: 32px;
   border: none !important;
@@ -349,7 +351,7 @@ a:hover {
 
 /* Hover effects with different colors for each item */
 .side-menu>.item:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateX(8px) scale(1.02);
   /* border-color: var(--accent-gold-light); */
   /* background: linear-gradient(135deg, rgba(42, 58, 82, 0.6) 0%, rgba(26, 42, 66, 0.5) 100%); */
   /* animation: glow-pulse 2s ease-in-out infinite; */
@@ -363,24 +365,28 @@ a:hover {
   right: 20px;
   opacity: 0.0;
   clip-path: polygon(var(--corner-size) 0%,
-        calc(100% - var(--corner-size)) 0%,
-        100% var(--corner-size),
-        100% calc(100% - var(--corner-size)),
-        calc(100% - var(--corner-size)) 100%,
-        var(--corner-size) 100%,
-        0% calc(100% - var(--corner-size)),
-        0% var(--corner-size));
-    --corner-size: 2px;
-    /* Define the size of the cut */
+      calc(100% - var(--corner-size)) 0%,
+      100% var(--corner-size),
+      100% calc(100% - var(--corner-size)),
+      calc(100% - var(--corner-size)) 100%,
+      var(--corner-size) 100%,
+      0% calc(100% - var(--corner-size)),
+      0% var(--corner-size));
+  --corner-size: 2px;
+  /* Define the size of the cut */
   transition: 0.2s ease-out;
 }
 
 
+.side-menu>.item.active {
+  transform: translateX(8px);
+}
+
 .side-menu>.item.active>.title {
   color: var(--accent-gold-light);
-    text-shadow:
-      0 0 15px rgba(255, 230, 179, 0.8),
-      2px 2px 6px rgba(0, 0, 0, 0.9);
+  text-shadow:
+    0 0 15px rgba(255, 230, 179, 0.8),
+    2px 2px 6px rgba(0, 0, 0, 0.9);
 }
 
 .side-menu>.item:hover::before,
@@ -456,7 +462,7 @@ a:hover {
   width: 100%;
   height: 100%;
   /* background: linear-gradient(90deg, */
-      /* transparent 0%,
+  /* transparent 0%,
       transparent 20%,
       #ffe6b377 80%,
       transparent 100%); */
@@ -615,7 +621,185 @@ a:hover {
   color: var(--color-secondary);
 }
 
-/* Responsive design */
+/* Quest Log Styles */
+.quest-log {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5em;
+}
+
+.quest-year {
+  position: relative;
+  padding-left: 2em;
+  border-left: 3px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.quest-year::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 0;
+  width: 11px;
+  height: 11px;
+  background: var(--accent-gold);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(211, 188, 142, 0.5);
+}
+
+.quest-year:hover {
+  border-left-color: var(--accent-gold-light);
+}
+
+.quest-year:hover::before {
+  background: var(--accent-gold-light);
+  box-shadow: 0 0 15px rgba(255, 230, 179, 0.7);
+}
+
+.year-header {
+  font-family: "gi";
+  font-size: 1.8em;
+  color: var(--accent-gold);
+  margin-bottom: 0.8em;
+  letter-spacing: -1px;
+  text-shadow:
+    0 0 10px rgba(211, 188, 142, 0.4),
+    2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.quest-item {
+  display: flex;
+  align-items: center;
+  padding: 0.9em 1.2em;
+  background: rgba(26, 42, 66, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+
+.quest-item:last-child {
+  flex-basis: 100%;
+}
+
+.quest-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: var(--accent-blue-bright);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.quest-item:hover {
+  background: rgba(42, 58, 82, 0.5);
+  border-color: var(--accent-gold-light);
+  transform: translateX(8px);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(211, 188, 142, 0.2);
+}
+
+.quest-item:hover::before {
+  opacity: 1;
+}
+
+.quest-item.completed {
+  opacity: 0.85;
+}
+
+.quest-item.completed .quest-marker {
+  color: var(--accent-blue-bright);
+  text-shadow: 0 0 8px rgba(90, 200, 255, 0.6);
+}
+
+.quest-task-list {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+}
+
+.quest-task {
+  display: flex;
+  align-items: center;
+  padding-left: 4em;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.quest-task-todo {
+  display: inline-block;
+  margin-right: 1em;
+  border: 1px solid var(--accent-gold-light);
+  width: 7px;
+  height: 7px;
+  transform: rotate(45deg);
+  box-sizing: border-box;
+}
+
+.quest-task-complete {
+  display: inline-block;
+  margin-right: 1em;
+  transform: rotate(45deg);
+  background: var(--accent-gold-light);
+  width: 7px;
+  height: 7px;
+}
+
+.quest-item:not(.completed) .quest-marker {
+  color: var(--accent-gold-light);
+  text-shadow: 0 0 8px rgba(255, 230, 179, 0.6);
+  animation: quest-pulse 2s ease-in-out infinite;
+}
+
+@keyframes quest-pulse {
+
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.quest-marker {
+  font-size: 1.1em;
+  margin-right: 1em;
+  min-width: 1.2em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.quest-name {
+  font-family: "gi";
+  font-size: 1.05em;
+  letter-spacing: -0.5px;
+  color: var(--color-primary);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.quest-item:hover .quest-name {
+  color: var(--accent-gold-light);
+  text-shadow:
+    0 0 8px rgba(255, 230, 179, 0.5),
+    1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
 @media (max-width: 768px) {
   .side-menu {
     flex-direction: column;
