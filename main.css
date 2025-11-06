@@ -94,13 +94,16 @@
   }
 }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   /*background: linear-gradient(135deg, #0a1628 0%, #132035 50%, #0f1e33 100%);*/
-  background: linear-gradient(0deg, #0a1e28 0%, #0a1e28 20%, #183956 35%, #0a1e28 60%, #0a1e28 100%);
+  /*background: linear-gradient(0deg, #0a1e28 0%, #0a1e28 20%, #183956 35%, #0a1e28 60%, #0a1e28 100%);*/
+  background-image:
+    radial-gradient(ellipse 70% 40% at 50% 40%, #0a1e28 0%, transparent 100%),
+    linear-gradient(0deg, #0a1e28 0%, #0a1e28 20%, transparent 35%, transparent 100%),
+    radial-gradient(ellipse 180% 40% at 50% 75%, #0a1e28 0%, #183956 20%, #183956 35%, #183956 50%, #0a1e28 80%);
   /*
     linear-gradient(9deg, #0a1e28 0%, #0a1e28 30%, #215771 50%, #0a1e28 80%, #0a1e28 100%); */
   /* background:
@@ -108,7 +111,7 @@ body {
     linear-gradient(0deg, #0000 0%, #0a1e28)
     linear-gradient(90deg, #0a1e28 0%, #0a1e28 30%, #215671 50%, #0a1e28 80%, #0a1e28 100%),
     #0a1e28; */
-  background-size: 100% 100%, 100% 60%;
+  background-size: 100% 100%;
   background-position: center center, center top;
   background-repeat: no-repeat;
   color: var(--color-primary);
@@ -341,7 +344,7 @@ a:hover {
 
 .side-menu>.item>.title {
   font-family: "gi";
-  color: var(--accent-gold-light);
+  color: var(--accent-gold);
   text-shadow:
     0 0 10px rgba(211, 188, 142, 0.5),
     2px 2px 4px rgba(0, 0, 0, 0.7);
@@ -1017,7 +1020,7 @@ a:hover {
   top: 0;
   height: 100%;
   width: 4px;
-  background: linear-gradient(180deg, var(--accent-gold) 0%, var(--accent-blue-bright) 100%);
+  background: var(--accent-blue-bright);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
