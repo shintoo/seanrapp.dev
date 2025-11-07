@@ -32,13 +32,13 @@ const createStarfield = () => {
       const latitude = Math.random() * Math.PI / 2; // 0 to 90 degrees
 
       // Calculate y position based on latitude
-      // Lower latitude (closer to horizon) = middle of screen
+      // Lower latitude (closer to horizon) = "middle" of screen (35% up from bottom of screen)
       // Higher latitude (closer to zenith) = distributed across screen
-      // Use a mapping where latitude determines the vertical distribution
+      // Map latitude (0 to π/2) to vertical position
+      // latitude 0 (horizon) -> 0.35 (35% up from bottom)
+      // latitude π/2 (zenith) -> 1.1 (beyond top of screen)
       const normalizedLatitude = latitude / (Math.PI / 2); // 0 to 1
-      const yRange = canvas.height * (1 - normalizedLatitude * 0.7); // Stars near zenith have less y variation
-      const yOffset = (canvas.height - yRange) / 2;
-      const y = yOffset + Math.random() * yRange;
+      const y = 0.5 + (normalizedLatitude * 0.9); // 0.35 to 0.75
 
       stars.push({
         longitude: longitude,
@@ -47,7 +47,8 @@ const createStarfield = () => {
         radius: Math.random() * 1.2 + 0.3,
         opacity: Math.random() * 0.5 + 0.3,
         twinkleSpeed: Math.random() * 0.1 + 0.001,
-        twinklePhase: Math.random() * Math.PI * 2
+        twinklePhase: Math.random() * Math.PI * 2,
+        color: [Math.random() * 255, Math.random() * 255, Math.random() * 255]
       });
     }
   };
@@ -55,32 +56,29 @@ const createStarfield = () => {
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Update rotation angle
-    rotationAngle += rotationSpeed;
+    // Update rotation angle - this is the base rotation
+    rotationAngle -= rotationSpeed;
 
     stars.forEach(star => {
-      // Calculate current longitude with rotation
-      const currentLongitude = star.longitude + rotationAngle;
 
-      // Project 3D position onto 2D screen
-      // The closer to the horizon (latitude near 0), the wider the circular path
-      // The closer to zenith (latitude near π/2), the smaller the circular path
-      const horizontalRadius = Math.cos(star.latitude) * canvas.width * 0.6;
-      const x = canvas.width / 2 + Math.sin(currentLongitude) * horizontalRadius;
-      const y = star.y;
+      // Calculate rotated longitude (horizontal rotation around the dome)
+      const rotatedLongitude = star.longitude + rotationAngle;
 
-      // Check if star is visible on screen (simple bounds check)
-      // This prevents stars from disappearing in the middle of the screen
-      if (x < -50 || x > canvas.width + 50) {
-        return; // Skip stars that are off-screen
-      }
+      // Project 3D spherical coordinates to 2D screen coordinates
+      // Convert spherical to Cartesian coordinates on a hemisphere
+      const radius = 1; // Unit sphere radius
+      const x3d = radius * Math.cos(star.latitude) * Math.cos(rotatedLongitude);
+      const y3d = radius * Math.sin(star.latitude);
+      const z3d = radius * Math.cos(star.latitude) * Math.sin(rotatedLongitude);
 
-      // Calculate depth (z-axis) to determine if star is behind viewer
-      // cos(longitude) gives us the forward/backward position
-      const z = Math.cos(currentLongitude);
-      if (z < 0) {
-        return; // Skip stars behind the viewer
-      }
+      // Only render stars in front of the viewer (z >= 0 means facing us)
+      if (z3d < 0) return;
+
+      // Project to 2D screen space
+      // x3d maps to horizontal position (-1 to 1 -> 0 to canvas.width)
+      // y3d maps to vertical position (0 to 1 -> top to middle of screen)
+      const x = (x3d + 1) * canvas.width / 2;
+      const y = (1 - y3d) * canvas.height * 0.67; // Scale to upper portion of screen
 
       // Update twinkle effect
       star.twinklePhase += star.twinkleSpeed;
@@ -90,6 +88,7 @@ const createStarfield = () => {
       ctx.beginPath();
       ctx.arc(x, y, star.radius, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(255, 230, 179, ${currentOpacity})`;
+      // ctx.fillStyle = `rgba(${star.color[0]}, ${star.color[1]}, ${star.color[2]}, ${currentOpacity})`;
       ctx.fill();
     });
 
