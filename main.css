@@ -355,6 +355,7 @@ a:hover {
 /* Hover effects with different colors for each item */
 .side-menu>.item:hover {
   transform: translateX(8px) scale(1.02);
+  background: radial-gradient(100px 10px at 40% 50%, #d3bc8e55, transparent 100%);
   /* border-color: var(--accent-gold-light); */
   /* background: linear-gradient(135deg, rgba(42, 58, 82, 0.6) 0%, rgba(26, 42, 66, 0.5) 100%); */
   /* animation: glow-pulse 2s ease-in-out infinite; */
@@ -383,6 +384,7 @@ a:hover {
 
 .side-menu>.item.active {
   transform: translateX(8px);
+  background: radial-gradient(100px 10px at 40% 50%, #d3bc8e55, transparent 100%);
 }
 
 .side-menu>.item.active>.title, .side-menu>.item.active>.icon {

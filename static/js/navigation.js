@@ -119,16 +119,21 @@ const initSPANavigation = () => {
   // Load content on initial page load
   const currentPath = window.location.pathname;
   if (!currentPath || currentPath === '/' || currentPath === '/index.html') {
-    // Home page - load home content
-    loadHomePage();
+    // Home page - load bio by default
+    history.replaceState({ url: '/about.html' }, '', '/about.html');
+    loadPage('/about.html').then(() => {
+      setActiveMenuItem('/about.html');
+    });
   } else {
     // Other pages - fetch and load content
     loadPage(currentPath).then(() => {
       setActiveMenuItem(currentPath);
     }).catch(() => {
-      // If page not found, load home page
-      history.replaceState({ url: '/' }, '', '/');
-      loadHomePage();
+      // If page not found, load bio page
+      history.replaceState({ url: '/about.html' }, '', '/about.html');
+      loadPage('/about.html').then(() => {
+        setActiveMenuItem('/about.html');
+      });
     });
   }
 };
