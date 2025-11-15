@@ -12,6 +12,7 @@ const loadPage = async (url) => {
     // Extract the main content
     const newMain = doc.querySelector('.main');
     if (newMain) {
+      window.scrollTo(0, 0);
       const currentMain = document.querySelector('.main');
       currentMain.style.opacity = '0.0';
       setTimeout(() => {
