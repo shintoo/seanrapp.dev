@@ -7,10 +7,37 @@
   <script src="../static/js/navigation.js"></script>
   <script src="../static/js/quest-gallery.js"></script>
   <script src="../static/js/utils.js"></script>
+  <script src="../static/js/mobile-menu.js"></script>
   <script src="../static/js/stereo-gallery.js"></script>
 </head>
 
 <body>
+  <!-- Hamburger Menu Button (Mobile Only) -->
+  <div class="hamburger-button" id="hamburger-button">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+    <div class="mobile-menu-content">
+      <a class="item" href="/about.html">
+        <img class="icon" src="/static/img/bio.png" />
+        <div class="title">Bio</div>
+      </a>
+      <a class="item" href="/adventures/index.html">
+        <img class="icon" src="/static/img/compass2.png" />
+        <div class="title">Quest Log</div>
+      </a>
+      <a class="item" href="/thoughts/index.html">
+        <img class="icon" src="/static/img/journal.png" />
+        <div class="title">Journal</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Desktop Side Menu -->
   <div class="side-menu">
     <a class="item" href="/about.html" class="main-link">
       <img class="icon" src="/static/img/bio.png" />
