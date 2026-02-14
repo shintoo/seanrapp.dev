@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="main.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .star-link {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      display: block;
+    }
+
+    .star-link .tooltip {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(100% + 8px);
+      color: white;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .star-link:hover .tooltip {
+      opacity: 1;
+    }
+
+    .star-link:hover {
+      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="starfield" id="starfield">
+    <a class="star-link" href="/about.html" id="star-about">
+      <span class="tooltip">about</span>
+    </a>
+    <a class="star-link" href="/thoughts/index.html" id="star-thoughts">
+      <span class="tooltip">thoughts</span>
+    </a>
+    <a class="star-link" href="/adventures/index.html" id="star-adventures">
+      <span class="tooltip">adventures</span>
+    </a>
+  </div>
+
+  <script>
+    (function () {
+      const starfield = document.getElementById('starfield');
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const STAR_COUNT = 120;
+      const G = 5;            // gravitational constant (tuned for visual effect)
+      const DAMPING = 0.998;   // slight drag so stars don't fly away forever
+      const SOFT_MIN = 300;     // softening distance to prevent extreme forces
+      const MAX_SPEED = 3.5;   // cap velocity so nothing shoots off screen
+      const DT = 0.05;         // fixed timestep per frame (~10ms at 60fps feel)
+
+      const stars = [];
+
+      // Generate background stars with physics state
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const el = document.createElement('div');
+        el.classList.add('star');
+        const size = 1 + Math.random() * 2; // 1-3px
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.opacity = 0.4 + Math.random() * 0.6;
+        starfield.appendChild(el);
+
+        stars.push({
+          el,
+          mass: size,
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.2,
+          vy: (Math.random() - 0.5) * 0.2,
+        });
+      }
+
+      // Position stars initially
+      stars.forEach(s => {
+        s.el.style.left = s.x + 'px';
+        s.el.style.top = s.y + 'px';
+      });
+
+      // Gravity simulation loop
+      function simulate() {
+        const len = stars.length;
+
+        // Accumulate gravitational forces
+        for (let i = 0; i < len; i++) {
+          const a = stars[i];
+          for (let j = i + 1; j < len; j++) {
+            const b = stars[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const distSq = dx * dx + dy * dy + SOFT_MIN * SOFT_MIN;
+            const dist = Math.sqrt(distSq);
+            const force = G * a.mass * b.mass / distSq;
+            const fx = force * dx / dist;
+            const fy = force * dy / dist;
+
+            // F = ma, so a = F/m
+            a.vx += fx / a.mass * DT;
+            a.vy += fy / a.mass * DT;
+            b.vx -= fx / b.mass * DT;
+            b.vy -= fy / b.mass * DT;
+          }
+        }
+
+        // Update positions
+        for (let i = 0; i < len; i++) {
+          const s = stars[i];
+
+          // Clamp speed
+          const speed = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
+          if (speed > MAX_SPEED) {
+            s.vx = (s.vx / speed) * MAX_SPEED;
+            s.vy = (s.vy / speed) * MAX_SPEED;
+          }
+
+          // Apply damping
+          s.vx *= DAMPING;
+          s.vy *= DAMPING;
+
+          s.x += s.vx * DT;
+          s.y += s.vy * DT;
+
+          // Wrap around screen edges
+          if (s.x < -10) s.x += W + 20;
+          else if (s.x > W + 10) s.x -= W + 20;
+          if (s.y < -10) s.y += H + 20;
+          else if (s.y > H + 10) s.y -= H + 20;
+
+          s.el.style.left = s.x + 'px';
+          s.el.style.top = s.y + 'px';
+        }
+
+        requestAnimationFrame(simulate);
+      }
+
+      requestAnimationFrame(simulate);
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        const newW = window.innerWidth;
+        const newH = window.innerHeight;
+        stars.forEach(s => {
+          s.x = s.x / W * newW;
+          s.y = s.y / H * newH;
+        });
+      });
+
+      // --- Link stars: keep simple wobble animation ---
+      const linkStars = [
+        { id: 'star-about', size: 8 },
+        { id: 'star-thoughts', size: 6 },
+        { id: 'star-adventures', size: 9 },
+      ];
+
+      const regions = [
+        { xMin: 15, xMax: 40, yMin: 20, yMax: 45 },
+        { xMin: 45, xMax: 75, yMin: 30, yMax: 60 },
+        { xMin: 25, xMax: 55, yMin: 60, yMax: 80 },
+      ];
+
+      linkStars.forEach((star, i) => {
+        const el = document.getElementById(star.id);
+        el.style.width = star.size + 'px';
+        el.style.height = star.size + 'px';
+        const region = regions[i];
+        el.style.left = (region.xMin + Math.random() * (region.xMax - region.xMin)) + '%';
+        el.style.top = (region.yMin + Math.random() * (region.yMax - region.yMin)) + '%';
+
+        const duration = 4 + Math.random() * 3;
+        const xRange = 1.5 + Math.random() * 1.5;
+        const yRange = 1.5 + Math.random() * 1.5;
+        const delay = Math.random() * -duration;
+
+        const name = `wobble-link-${i}`;
+        el.style.animation = `${name} ${duration}s ease-in-out ${delay}s infinite`;
+
+        const keyframes = `
+          @keyframes ${name} {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(${xRange}px, ${-yRange}px); }
+            50% { transform: translate(${-xRange * 0.5}px, ${yRange}px); }
+            75% { transform: translate(${-xRange}px, ${-yRange * 0.5}px); }
+          }
+        `;
+        const styleEl = document.createElement('style');
+        styleEl.textContent = keyframes;
+        document.head.appendChild(styleEl);
+      });
+    })();
+  </script>
+</body>
+
+</html>
