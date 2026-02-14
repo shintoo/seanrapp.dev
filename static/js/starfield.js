@@ -1,108 +1,120 @@
-// Starfield background
-const createStarfield = () => {
-  const canvas = document.createElement('canvas');
-  canvas.id = 'starfield';
-  canvas.style.position = 'fixed';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.style.pointerEvents = 'none';
-  document.body.insertBefore(canvas, document.body.firstChild);
+document.addEventListener('DOMContentLoaded', function () {
+  let container = document.querySelector('.starfield');
+  if (!container) {
+    container = document.createElement('div');
+    container.classList.add('starfield');
+    document.body.prepend(container);
+  }
 
-  const ctx = canvas.getContext('2d');
-  let stars = [];
-  let rotationAngle = 0;
-  const rotationSpeed = 0.0004; // Slow rotation speed (radians per frame)
+  let W = window.innerWidth;
+  let H = window.innerHeight;
+  const SYSTEM_COUNT = 120;
+  const G = 2;
+  const DAMPING = 0.995;
+  const SOFT_MIN = 2;
+  const MAX_SPEED = 9999;
+  const DT = 0.075;
+  const SPREAD = 60;
 
-  const resizeCanvas = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    initStars();
-  };
+  const systems = [];
 
-  const initStars = () => {
-    stars = [];
-    const numStars = Math.floor((canvas.width * canvas.height) / 8000);
-    for (let i = 0; i < numStars; i++) {
-      // Store stars in spherical coordinates
-      // longitude: horizontal angle around the dome (0 to 2π)
-      // latitude: vertical angle from horizon (0 = horizon, π/2 = zenith/top)
-      const longitude = Math.random() * Math.PI * 2;
-      const latitude = Math.random() * Math.PI / 2; // 0 to 90 degrees
+  for (let s = 0; s < SYSTEM_COUNT; s++) {
+    const cx = Math.random() * W;
+    const cy = Math.random() * H;
+    const count = 1 + Math.floor(Math.random() * 3);
+    const system = [];
 
-      // Calculate y position based on latitude
-      // Lower latitude (closer to horizon) = "middle" of screen (35% up from bottom of screen)
-      // Higher latitude (closer to zenith) = distributed across screen
-      // Map latitude (0 to π/2) to vertical position
-      // latitude 0 (horizon) -> 0.35 (35% up from bottom)
-      // latitude π/2 (zenith) -> 1.1 (beyond top of screen)
-      const normalizedLatitude = latitude / (Math.PI / 2); // 0 to 1
-      const y = 0.5 + (normalizedLatitude * 0.9); // 0.35 to 0.75
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.classList.add('star');
+      const size = 1 + Math.random() * 2;
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.opacity = 0.4 + Math.random() * 0.6;
+      container.appendChild(el);
 
-      stars.push({
-        longitude: longitude,
-        latitude: latitude,
-        y: y,
-        radius: Math.random() * 1.2 + 0.3,
-        opacity: Math.random() * 0.5 + 0.3,
-        twinkleSpeed: Math.random() * 0.1 + 0.001,
-        twinklePhase: Math.random() * Math.PI * 2,
-        color: [Math.random() * 255, Math.random() * 255, Math.random() * 255]
-      });
+      const angle = Math.random() * Math.PI * 2;
+      const r = count === 1 ? 0 : (SPREAD * 0.4 + Math.random() * SPREAD * 0.6);
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+
+      let vx = 0, vy = 0;
+      if (count > 1) {
+        vx = -Math.sin(angle) * 0.3;
+        vy = Math.cos(angle) * 0.3;
+      }
+
+      const star = { el, mass: size, x, y, vx, vy };
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      system.push(star);
     }
-  };
 
-  const animate = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    systems.push(system);
+  }
 
-    // Update rotation angle - this is the base rotation
-    rotationAngle -= rotationSpeed;
+  function simulate() {
+    for (let s = 0; s < systems.length; s++) {
+      const sys = systems[s];
+      const len = sys.length;
 
-    stars.forEach(star => {
+      for (let i = 0; i < len; i++) {
+        const a = sys[i];
+        for (let j = i + 1; j < len; j++) {
+          const b = sys[j];
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const distSq = dx * dx + dy * dy + SOFT_MIN * SOFT_MIN;
+          const dist = Math.sqrt(distSq);
+          const force = G * a.mass * b.mass / distSq;
+          const fx = force * dx / dist;
+          const fy = force * dy / dist;
 
-      // Calculate rotated longitude (horizontal rotation around the dome)
-      const rotatedLongitude = star.longitude + rotationAngle;
+          a.vx += fx / a.mass * DT;
+          a.vy += fy / a.mass * DT;
+          b.vx -= fx / b.mass * DT;
+          b.vy -= fy / b.mass * DT;
+        }
+      }
 
-      // Project 3D spherical coordinates to 2D screen coordinates
-      // Convert spherical to Cartesian coordinates on a hemisphere
-      const radius = 1; // Unit sphere radius
-      const x3d = radius * Math.cos(star.latitude) * Math.cos(rotatedLongitude);
-      const y3d = radius * Math.sin(star.latitude);
-      const z3d = radius * Math.cos(star.latitude) * Math.sin(rotatedLongitude);
+      for (let i = 0; i < len; i++) {
+        const star = sys[i];
 
-      // Only render stars in front of the viewer (z >= 0 means facing us)
-      if (z3d < 0) return;
+        const speed = Math.sqrt(star.vx * star.vx + star.vy * star.vy);
+        if (speed > MAX_SPEED) {
+          star.vx = (star.vx / speed) * MAX_SPEED;
+          star.vy = (star.vy / speed) * MAX_SPEED;
+        }
 
-      // Project to 2D screen space
-      // x3d maps to horizontal position (-1 to 1 -> 0 to canvas.width)
-      // y3d maps to vertical position (0 to 1 -> top to middle of screen)
-      const x = (x3d + 1) * canvas.width / 2;
-      const y = (1 - y3d) * canvas.height * 0.67; // Scale to upper portion of screen
+        star.vx *= DAMPING;
+        star.vy *= DAMPING;
 
-      // Update twinkle effect
-      star.twinklePhase += star.twinkleSpeed;
-      const twinkle = Math.sin(star.twinklePhase) * 0.6 + 1;
-      const currentOpacity = star.opacity * twinkle;
+        star.x += star.vx * DT;
+        star.y += star.vy * DT;
 
-      ctx.beginPath();
-      ctx.arc(x, y, star.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 230, 179, ${currentOpacity})`;
-      // ctx.fillStyle = `rgba(${star.color[0]}, ${star.color[1]}, ${star.color[2]}, ${currentOpacity})`;
-      ctx.fill();
-    });
+        if (star.x < -10) star.x += W + 20;
+        else if (star.x > W + 10) star.x -= W + 20;
+        if (star.y < -10) star.y += H + 20;
+        else if (star.y > H + 10) star.y -= H + 20;
 
-    requestAnimationFrame(animate);
-  };
+        star.el.style.left = star.x + 'px';
+        star.el.style.top = star.y + 'px';
+      }
+    }
 
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-  animate();
-};
+    requestAnimationFrame(simulate);
+  }
 
-// Initialize starfield when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', createStarfield);
-} else {
-  createStarfield();
-}
+  requestAnimationFrame(simulate);
+
+  window.addEventListener('resize', () => {
+    const newW = window.innerWidth;
+    const newH = window.innerHeight;
+    systems.forEach(sys => sys.forEach(star => {
+      star.x = star.x / W * newW;
+      star.y = star.y / H * newH;
+    }));
+    W = newW;
+    H = newH;
+  });
+});
