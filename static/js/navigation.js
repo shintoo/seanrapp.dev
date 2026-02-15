@@ -22,6 +22,10 @@ const loadPage = async (url) => {
         if (typeof initQuestGallery === 'function') {
           initQuestGallery();
         }
+        // Re-initialize solar system after content is loaded
+        if (typeof initSolarSystem === 'function') {
+          initSolarSystem();
+        }
       }, 250);
     }
     return Promise.resolve();

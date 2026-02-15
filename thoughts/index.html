@@ -4,48 +4,321 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../main.css">
-  <script src="../static/js/starfield.js"></script>
+  <link rel="stylesheet" href="budd-e.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="../static/js/navigation.js"></script>
+  <script src="../static/js/starfield.js"></script>
   <script src="../static/js/utils.js"></script>
+  <style>
+    .solar-system {
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .solar-system svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .central-star {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      z-index: 2;
+      text-decoration: none;
+    }
+
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      display: block;
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    .planet .tooltip {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(100% + 8px);
+      color: white;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      border: 1px solid white;
+      padding: 8px;
+    }
+
+    .planet:hover .tooltip {
+      opacity: 1;
+    }
+
+    .planet:hover {
+      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
+    }
+
+    .article-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .article-modal-overlay.active {
+      display: flex;
+    }
+
+    .article-modal {
+      position: relative;
+      background: black;
+      border: 1px solid white;
+      width: 700px;
+      max-width: 90vw;
+      height: 90vh;
+      overflow-y: auto;
+      padding: 40px 32px 32px;
+      line-height: 1.8;
+      font-family: Ubuntu, Droid Sans Mono, sans-serif;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .article-modal::-webkit-scrollbar {
+      display: none;
+    }
+
+    .imgc {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .imgc img {
+      max-width: 60%;
+    }
+
+    @media (max-width: 768px) {
+      .article-modal {
+        width: 95vw;
+        height: 95vh;
+        padding: 40px 16px 16px;
+      }
+    }
+
+    .article-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      color: white;
+      font-family: monospace;
+      font-size: 20px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      z-index: 101;
+      padding: 4px 8px;
+    }
+
+    .article-modal-close:hover {
+      color: #aaa;
+    }
+  </style>
 </head>
 
 <body>
   <div class="main">
-    <div class="journal-container">
-      <div class="journal-entries">
-        <a href="/thoughts/budd-e.html" class="journal-entry">
-          <div class="entry-date">5 May, 2025</div>
-          <div class="entry-title">BUDD-E: An emotional robot</div>
-          <div class="entry-excerpt">
-            Nintendogs was my first Nintendo DS game, and the inspiration for one of my very first programming projects as an
-            amateur. In 2015, I wrote a text-based version of Nintendogs, called MyPet. It was my first foray into artificial life...
-          </div>
-          <div class="entry-footer">
-            <span class="read-marker">→ Continue Reading</span>
-          </div>
-        </a>
+    <div class="solar-system" id="solar-system">
+      <svg id="orbit-paths"></svg>
+      <a href="/home.html" class="central-star"></a>
+      <a class="planet" id="planet-0"><span class="tooltip">BUDD-E: An emotional robot</span></a>
+      <a class="planet" id="planet-1"><span class="tooltip">Stereoscopy and other visual curiosities</span></a>
+    </div>
 
-        <a href="/thoughts/stereo.html" class="journal-entry">
-          <div class="entry-date">13 December, 2024</div>
-          <div class="entry-title">Stereoscopy and other visual curiosities</div>
-          <div class="entry-excerpt">
-Remember when the rumors of the 3DS came out, a million moons ago?
-
-My friend Josh in middle school band told me that it would have 3D without glasses. I had no idea how the flip that
-would work, and all my 12-year old brain could imagine was a cube with screens on all sides, which makes absolutely zero
-(0) sense...          </div>
-          <div class="entry-footer">
-            <span class="read-marker">→ Continue Reading</span>
-          </div>
-        </a>
+    <div class="article-modal-overlay" id="article-modal-overlay">
+      <div class="article-modal" id="article-modal">
+        <button class="article-modal-close" id="article-modal-close">&times;</button>
+        <div class="article-modal-content" id="article-modal-content"></div>
       </div>
     </div>
   </div>
 
-  <div class="footer">
-    <div>it's sean rapp, baby</div>
-    <div><img src="../static/img/record.gif" style="width: 20px; height: 20px" /> <span id="sotd"></div>
-  </div>
+  <script>
+    var _solarSystemAnimationId = null;
+
+    function initSolarSystem() {
+      // Cancel any previous animation loop
+      if (_solarSystemAnimationId) {
+        cancelAnimationFrame(_solarSystemAnimationId);
+        _solarSystemAnimationId = null;
+      }
+
+      const container = document.getElementById('solar-system');
+      if (!container) return;
+
+      const ORBIT_SPEED_MULTIPLIER = 0.05;
+
+      const articles = [
+        {
+          id: 'planet-0',
+          title: 'BUDD-E: An emotional robot',
+          href: '/thoughts/budd-e.html',
+          size: 10,
+          semiMajorAxis: 0.30,
+          semiMinorAxis: 0.10,
+          speed: 0.3,
+          startAngle: Math.PI * Math.random() * 2
+        },
+        {
+          id: 'planet-1',
+          title: 'Stereoscopy and other visual curiosities',
+          href: '/thoughts/stereo.html',
+          size: 14,
+          semiMajorAxis: 0.45,
+          semiMinorAxis: 0.2,
+          speed: 0.2,
+          startAngle: Math.PI * Math.random() * 2,
+        }
+      ];
+
+      const svg = document.getElementById('orbit-paths');
+      const overlay = document.getElementById('article-modal-overlay');
+      const modalContent = document.getElementById('article-modal-content');
+      const modalClose = document.getElementById('article-modal-close');
+
+      if (!svg || !overlay || !modalContent || !modalClose) return;
+
+      const angles = articles.map(a => a.startAngle);
+
+      function drawOrbits() {
+        const w = container.offsetWidth;
+        const h = container.offsetHeight;
+        const cx = w / 2;
+        const cy = h / 2;
+
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+        svg.innerHTML = '';
+
+        articles.forEach(article => {
+          const a = article.semiMajorAxis * w;
+          const b = article.semiMinorAxis * h;
+          const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+          ellipse.setAttribute('cx', cx);
+          ellipse.setAttribute('cy', cy);
+          ellipse.setAttribute('rx', a);
+          ellipse.setAttribute('ry', b);
+          ellipse.setAttribute('fill', 'none');
+          ellipse.setAttribute('stroke', 'gray');
+          ellipse.setAttribute('stroke-width', '1');
+          svg.appendChild(ellipse);
+        });
+      }
+
+      function updatePlanets() {
+        // Stop if container was removed from DOM (SPA navigated away)
+        if (!document.contains(container)) {
+          _solarSystemAnimationId = null;
+          return;
+        }
+
+        const w = container.offsetWidth;
+        const h = container.offsetHeight;
+        const cx = w / 2;
+        const cy = h / 2;
+
+        articles.forEach((article, i) => {
+          const el = document.getElementById(article.id);
+          if (!el) return;
+          const a = article.semiMajorAxis * w;
+          const b = article.semiMinorAxis * h;
+
+          angles[i] += article.speed * ORBIT_SPEED_MULTIPLIER * (1 / 60);
+
+          const x = cx + a * Math.cos(angles[i]) - article.size / 2;
+          const y = cy + b * Math.sin(angles[i]) - article.size / 2;
+
+          el.style.width = article.size + 'px';
+          el.style.height = article.size + 'px';
+          el.style.left = x + 'px';
+          el.style.top = y + 'px';
+        });
+
+        _solarSystemAnimationId = requestAnimationFrame(updatePlanets);
+      }
+
+      function openArticleModal(href) {
+        fetch(href)
+          .then(r => r.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const mainContent = doc.querySelector('.main');
+            if (mainContent) {
+              modalContent.innerHTML = mainContent.innerHTML;
+            }
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          });
+      }
+
+      function closeArticleModal() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        modalContent.innerHTML = '';
+      }
+
+      // Planet click handlers
+      articles.forEach(article => {
+        const el = document.getElementById(article.id);
+        if (!el) return;
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          openArticleModal(article.href);
+        });
+      });
+
+      // Modal close handlers
+      modalClose.addEventListener('click', closeArticleModal);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeArticleModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeArticleModal();
+      });
+
+      // Init
+      drawOrbits();
+      _solarSystemAnimationId = requestAnimationFrame(updatePlanets);
+
+      window.addEventListener('resize', drawOrbits);
+    }
+
+    // Run on initial page load
+    initSolarSystem();
+  </script>
 </body>
 
 </html>

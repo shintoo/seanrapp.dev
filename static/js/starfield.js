@@ -9,12 +9,12 @@ document.addEventListener('DOMContentLoaded', function () {
   let W = window.innerWidth;
   let H = window.innerHeight;
   const SYSTEM_COUNT = 120;
-  const G = 2;
-  const DAMPING = 0.995;
-  const SOFT_MIN = 2;
-  const MAX_SPEED = 9999;
-  const DT = 0.075;
-  const SPREAD = 60;
+  const G = 5;
+  const DAMPING = 0.998;
+  const SOFT_MIN = 20;
+  const MAX_SPEED = 2.5;
+  const DT = .15;
+  const SPREAD = 100;
 
   const systems = [];
 
