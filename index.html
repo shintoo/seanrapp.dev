@@ -4,6 +4,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="main.css">
+  <script src="../static/js/navigation.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -47,24 +48,29 @@
       box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
     }
   </style>
+
 </head>
 
 <body>
   <div class="starfield" id="starfield">
-    <a class="star-link nav-link" href="/about.html" id="star-about">
+  </div>
+  <div class="main">
+  
+
+    <a class="star-link" href="/about.html" id="star-about">
       <span class="tooltip">about</span>
     </a>
     <a class="star-link nav-link" href="/thoughts/index.html" id="star-thoughts">
       <span class="tooltip">thoughts</span>
     </a>
-    <a class="star-link nav-link" href="/adventures/index.html" id="star-adventures">
+    <a class="star-link" href="/adventures/index.html" id="star-adventures">
       <span class="tooltip">adventures</span>
     </a>
   </div>
 
   <script src="/static/js/starfield.js"></script>
   <script>
-    (function () {
+    function initHomeNav() {
       const linkStars = [
         { id: 'star-about', size: 8 },
         { id: 'star-thoughts', size: 6 },
@@ -96,16 +102,16 @@
         const keyframes = `
           @keyframes ${name} {
             0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(${xRange}px, ${-yRange}px); }
             50% { transform: translate(${-xRange * 0.5}px, ${yRange}px); }
-            75% { transform: translate(${-xRange}px, ${-yRange * 0.5}px); }
           }
         `;
         const styleEl = document.createElement('style');
         styleEl.textContent = keyframes;
         document.head.appendChild(styleEl);
       });
-    })();
+    }
+
+    initHomeNav();
   </script>
 </body>
 

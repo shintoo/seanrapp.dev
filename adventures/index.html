@@ -1,328 +1,654 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../main.css">
-  <script src="../static/js/starfield.js"></script>
-  <script src="../static/js/navigation.js"></script>
-  <script src="../static/js/utils.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>adventures</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0a;
+    --white: #e8e4df;
+    --white-dim: rgba(232, 228, 223, 0.4);
+    --white-faint: rgba(232, 228, 223, 0.08);
+    --accent: #e8e4df;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    cursor: grab;
+  }
+
+  body:active { cursor: grabbing; }
+
+  #canvas-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+  }
+
+  #sun {
+    border-radius: 100%;
+    background: white;
+    width: 30px;
+    height: 30px;
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    left: 0;
+  }
+
+  canvas { display: block; }
+
+  /* Tooltip on hover */
+  #hover-label {
+    position: fixed;
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'Instrument Serif', serif;
+    font-size: 1rem;
+    color: var(--white);
+    background: rgba(10,10,10,0.8);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--white-faint);
+    padding: 6px 14px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  #hover-label.visible { opacity: 1; }
+
+  /* Modal overlay */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  #modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #modal {
+    background: #111;
+    border: 1px solid rgba(232, 228, 223, 0.1);
+    border-radius: 8px;
+    max-width: 680px;
+    width: 92vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.35s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(232,228,223,0.15) transparent;
+  }
+
+  #modal-overlay.open #modal {
+    transform: translateY(0) scale(1);
+  }
+
+  #modal-close {
+    position: sticky;
+    top: 0;
+    float: right;
+    z-index: 5;
+    margin: 16px 16px 0 0;
+    background: rgba(10,10,10,0.7);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--white-faint);
+    color: var(--white);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  #modal-close:hover { background: rgba(232,228,223,0.1); }
+
+  #modal-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    padding: 40px 36px 8px;
+    line-height: 1.2;
+  }
+
+  #modal-gallery {
+    display: flex;
+    gap: 8px;
+    padding: 20px 36px 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  #modal-gallery::-webkit-scrollbar { display: none; }
+
+  #modal-gallery img {
+    height: 220px;
+    min-width: 160px;
+    object-fit: cover;
+    border-radius: 4px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    border: 1px solid var(--white-faint);
+  }
+
+  #modal-description {
+    padding: 20px 36px 36px;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(232,228,223,0.8);
+  }
+
+  #modal-description a {
+    color: var(--white);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Subtle page title */
+  #page-title {
+    position: fixed;
+    top: 28px;
+    left: 36px;
+    z-index: 5;
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.02em;
+    color: var(--white-dim);
+    pointer-events: none;
+  }
+
+  /* Subtle instructions */
+  #hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    font-size: 0.75rem;
+    color: rgba(232,228,223,0.25);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+</style>
 </head>
-
 <body>
-  <div class="main">
-    <!-- <div class="title">Quest Log</div> -->
-    <div class="quest-log">
-      <div class="quest-year">
-        <div class="year-header">2026</div>
-        <div class="quest-list">
-          <div class="quest-item completed" data-quest="lancaster">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Lancaster, PA</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Stay in a home built in the 1870s for a local textiles merchant
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Buy bagels from the Amish at the Central Market
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Ride in a historic wooden train car being pulled by a 1910 steam locomotive at the Strasburg Railroad
-              </div>
-            </div>
-            <div class="quest-gallery">
-              <div class="gallery-images">
-                <img src="/static/img/quests/lancaster/lancaster1.jpg" alt="Lancaster adventure" class="gallery-img">
-                <img src="/static/img/quests/lancaster/lancaster2.jpg" alt="Lancaster adventure" class="gallery-img">
-                <img src="/static/img/quests/lancaster/lancaster3.jpg" alt="Lancaster adventure" class="gallery-img">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="quest-year">
-        <div class="year-header">2025</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Philadelphia</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Explore charming cobblestone streets during the fall season
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>View ancient swords and impressionist paintings at the Philadelphia Museum of Art
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Ride the PATCO train across the Benjamin Franklin Bridge over the Delaware River
-              </div>
-            </div>
-          </div>
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Hawai'i</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Surf the waves at Waikīkī
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>See the Milky Way at Laniākea Beach
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Snorkel the coral reefs at Hanauma Bay
-              </div>
-            </div>
-          </div>
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Portugal</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Ride the streetcar in Lisbon
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Explore Castelo de São Jorge
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Taste Pastéis de Belém... in Belém
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Relax at a quiosque on the Rio Tejo
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="quest-year">
-        <div class="year-header">2024</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">South Korea</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Watch the Gwangan Bridge lights from Gwangalli beach at night
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Hike up to Gamcheon village in Busan
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Explore the grounds of the Gyeongbokgung palace in Seoul
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Visit the top of the Lotte World Tower, 5th tallest building in
-                the world
-              </div>
-            </div>
-          </div>
-          <div class="quest-item completed" data-quest="japan">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Japan</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Explore from Tokyo to Fukuoka via shinkansen
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Revisit old haunts in Funabashi
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Ride the suspended-type monorails in Chiba and Kamakura
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Have afternoon tea above Tokyo Bay
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Ride the Hakone Tozan Tetsudo train through the mountains
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Enjoy daifuku while watching the Kamo River in Kyoto
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Take the ropeway to the peaks of Miyajima
-              </div>
-            </div>
-          </div>
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Los Angeles</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Hike the trails at Malibu Creek State Park
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Enjoy the night views from Griffith Observatory
-              </div>
-            </div>
-          </div>
-          <div class="quest-item completed" data-quest="iceland">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Iceland</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Become acquainted with volcanic terrain in the Reykjanes
-                peninsula
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Zipline through the valleys
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Visit the largest puffin colony in the world at Vestmannaeyjar
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Ride Icelandic horses along the black sand beaches in Vík
-              </div>
-            </div>
-            <div class="quest-gallery">
-              <div class="gallery-images">
-                <img src="/static/img/quests/iceland/iceland1.jpg" alt="Iceland adventure" class="gallery-img">
-                <img src="/static/img/quests/iceland/iceland2.jpg" alt="Iceland adventure" class="gallery-img">
-                <img src="/static/img/quests/iceland/iceland3.jpg" alt="Iceland adventure" class="gallery-img">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="quest-year">
-        <div class="year-header">2023</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">NYC</span>
-          </div>
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Harper's Ferry</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Learn the history through a ghost tour on Halloween
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Hike to the Maryland Heights trail under the fall colors
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="quest-year">
-        <div class="year-header">2022</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Washington, D.C.</span>
-          </div>
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">NYC</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Watch Hadestown on Broadway
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Walk the Brooklyn Bridge (halfway)
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Buy a model airplane from Red Caboose
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="quest-year">
-        <div class="year-header">2021</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Asheville, NC</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Zipline through the Blue Ridge mountains
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="quest-year">
-        <div class="year-header">2020</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Portland, OR</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Browse Powell's City of Books, the largest independent bookstore
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Ride the streetcar and aerial tram
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Visit the Japanese Gardens
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="quest-year">
-        <div class="year-header">2019</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Cosby, TN</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Hike the Ramsey Cascades trail
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Check the cupboard for hiding feral humans at night
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Drive the Blue Ridge Parkway at sunset
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="quest-year">
-        <div class="year-header">2017</div>
-        <div class="quest-list">
-          <div class="quest-item completed">
-            <span class="quest-marker">✓</span>
-            <span class="quest-name">Japan</span>
-            <div class="quest-task-list">
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Move to the city of Funabashi in Chiba
-                prefecture
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Watch the sunset behind the Tokyo skyline from Odaiba
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>Pass the N3 Japanese Language Proficiency Test
-              </div>
-              <div class="quest-task">
-                <div class="quest-task-complete"></div>See snow falling for the first time during Christmas in Kyoto
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <a href="/"><div id="sun"></div></a>
+<div id="canvas-container"></div>
+<div id="hover-label"></div>
+<div id="modal-overlay">
+  <div id="modal">
+    <button id="modal-close">×</button>
+    <div id="modal-title"></div>
+    <div id="modal-gallery"></div>
+    <div id="modal-description"></div>
   </div>
+</div>
 
-  <div class="footer">
-    <div>it's sean rapp, baby</div>
-    <div><img src="../static/img/record.gif" style="width: 20px; height: 20px" /> <span id="sotd"></div>
-  </div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* =========================================================================
+   CONFIGURATION — EDIT YOUR DESTINATIONS HERE
+   =========================================================================
+
+   Each destination has:
+     name        – Label shown on hover and in the modal title
+     lat, lng    – Coordinates (decimal degrees)
+     images      – Array of image URLs for the gallery
+     description – An HTML string shown in the modal body.
+                   You can use <p>, <a>, <em>, <strong>, etc.
+   ========================================================================= */
+
+const DESTINATIONS = [
+  {
+    name: "Orlando",
+    lat: 28.5721,
+    lng: -81.3683,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "Tokyo - 2017",
+    lat: 35.6762,
+    lng: 139.6503,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Kyoto - 2017",
+    lat: 35.0303,
+    lng: 135.7734,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Cosby, Tennesee - 2019",
+    lat: 35.7026,
+    lng: -83.3577,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Portland, Oregon - 2020",
+    lat: 45.523,
+    lng: -122.6811,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Asheville, North Carolina - 2021",
+    lat: 35.4829,
+    lng: -82.6242,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "New York - 2022",
+    lat: 40.7606, 
+    lng: -73.9855,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Washington, D.C. - 2022",
+    lat: 38.8970,
+    lng:  -77.0033,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "Harper's Ferry, West Virginia - 2023",
+    lat: 39.3229,
+    lng: -77.7284,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "Iceland - 2024",
+    lat: 64.1466,
+    lng: -21.9426,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "Los Angeles, California - 2024",
+    lat: 34.0119,
+    lng: -118.4952,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "Japan - 2024",
+    lat: 35.0118,
+    lng: 135.7715,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "South Korea - 2024",
+    lat: 35.1512,
+    lng: 129.1169,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "Lisboa, Portugal - 2025",
+    lat: 38.7139,
+    lng: -9.1335,
+    images: [
+    ],
+    description: ``,
+  },
+
+  {
+    name: "Miami, Florida - 2025",
+    lat: 25.7684,
+    lng: -80.1880,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "O'ahu, Hawai'i - 2025",
+    lat: 21.6184,
+    lng: -158.0855,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Philadelphia, Pennsylvania - 2025",
+    lat: -39.9659,
+    lng: 75.1809,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Lancaster, Pennsylvania - 2025",
+    lat: 40.0437,
+    lng: -76.3072,
+    images: [
+    ],
+    description: ``,
+  },
+];
+
+
+/* =========================================================================
+   GLOBE SETUP
+   ========================================================================= */
+
+const container = document.getElementById('canvas-container');
+const hoverLabel = document.getElementById('hover-label');
+const modalOverlay = document.getElementById('modal-overlay');
+const modalTitle = document.getElementById('modal-title');
+const modalGallery = document.getElementById('modal-gallery');
+const modalDescription = document.getElementById('modal-description');
+const modalClose = document.getElementById('modal-close');
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.z = 3.2;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x0a0a0a, 1);
+container.appendChild(renderer.domElement);
+
+const globeGroup = new THREE.Group();
+globeGroup.rotation.x = 0.5;
+globeGroup.rotation.y = -0.1;
+scene.add(globeGroup);
+
+// Globe sphere — dark with a faint white wireframe
+const GLOBE_RADIUS = 1;
+
+const globeSolid = new THREE.Mesh(
+  new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64),
+  new THREE.MeshBasicMaterial({ color: 0x0a0a0a })
+);
+globeGroup.add(globeSolid);
+
+const wireframe = new THREE.LineSegments(
+  new THREE.WireframeGeometry(new THREE.SphereGeometry(GLOBE_RADIUS, 24, 24)),
+  new THREE.LineBasicMaterial({ color: 0xe8e4df, transparent: true, opacity: 0.04 })
+);
+globeGroup.add(wireframe);
+
+// Outer glow ring
+const glowRing = new THREE.Mesh(
+  new THREE.RingGeometry(GLOBE_RADIUS, GLOBE_RADIUS + 0.065, 128),
+  new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, side: THREE.DoubleSide })
+);
+globeGroup.add(glowRing);
+
+/* =========================================================================
+   GEOJSON — LOAD CONTINENT OUTLINES
+   ========================================================================= */
+
+function latLngToVec3(lat, lng, radius) {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  return new THREE.Vector3(
+    -radius * Math.sin(phi) * Math.cos(theta),
+     radius * Math.cos(phi),
+     radius * Math.sin(phi) * Math.sin(theta)
+  );
+}
+
+const GEO_URL = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson";
+
+fetch(GEO_URL)
+  .then(r => r.json())
+  .then(geo => {
+    const R = GLOBE_RADIUS + 0.001;
+    const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0});
+
+    geo.features.forEach(feature => {
+      const coords = feature.geometry.type === "Polygon"
+        ? [feature.geometry.coordinates]
+        : feature.geometry.coordinates; // MultiPolygon
+
+      coords.forEach(polygon => {
+        polygon.forEach(ring => {
+          const points = ring.map(([lng, lat]) => latLngToVec3(lat, lng, R));
+          const geometry = new THREE.BufferGeometry().setFromPoints(points);
+          globeGroup.add(new THREE.Line(geometry, material));
+        });
+      });
+    });
+  })
+  .catch(err => console.warn("Could not load land outlines:", err));
+
+/* =========================================================================
+   DESTINATION MARKERS
+   ========================================================================= */
+
+const markerMeshes = [];
+const MARKER_RADIUS = 0.02;
+
+DESTINATIONS.forEach((dest, i) => {
+  const pos = latLngToVec3(dest.lat, dest.lng, GLOBE_RADIUS + 0.006);
+
+  // Outer ring
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(MARKER_RADIUS * 0.6, MARKER_RADIUS, 24),
+    new THREE.MeshBasicMaterial({ color: 0xe8e4df, transparent: true, opacity: 0.9, side: THREE.DoubleSide })
+  );
+  ring.position.copy(pos);
+  ring.lookAt(new THREE.Vector3(0, 0, 0));
+  globeGroup.add(ring);
+
+  // Inner dot
+  const dot = new THREE.Mesh(
+    new THREE.CircleGeometry(MARKER_RADIUS * 0.15, 16),
+    new THREE.MeshBasicMaterial({ color: 0xe8e4df, side: THREE.DoubleSide })
+  );
+  dot.position.copy(pos);
+  dot.lookAt(new THREE.Vector3(0, 0, 0));
+  globeGroup.add(dot);
+
+  // Invisible hit-target sphere for raycasting
+  const hitSphere = new THREE.Mesh(
+    new THREE.SphereGeometry(MARKER_RADIUS * 2.5, 12, 12),
+    new THREE.MeshBasicMaterial({ visible: false })
+  );
+  hitSphere.position.copy(pos);
+  hitSphere.userData = { destIndex: i };
+  globeGroup.add(hitSphere);
+  markerMeshes.push(hitSphere);
+});
+
+/* =========================================================================
+   INTERACTION — DRAG TO ROTATE, CLICK MARKERS
+   ========================================================================= */
+
+let isDragging = false;
+let previousMouse = { x: 0, y: 0 };
+let rotationVelocity = { x: 0, y: 0 };
+let autoRotate = true;
+const mouse = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
+
+renderer.domElement.addEventListener('pointerdown', e => {
+  isDragging = true;
+  autoRotate = false;
+  previousMouse = { x: e.clientX, y: e.clientY };
+  rotationVelocity = { x: 0, y: 0 };
+});
+
+renderer.domElement.addEventListener('pointermove', e => {
+  // Hover detection
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(markerMeshes);
+
+  if (hits.length > 0) {
+    const dest = DESTINATIONS[hits[0].object.userData.destIndex];
+    hoverLabel.textContent = dest.name;
+    hoverLabel.style.left = e.clientX + 14 + 'px';
+    hoverLabel.style.top = e.clientY - 14 + 'px';
+    hoverLabel.classList.add('visible');
+    renderer.domElement.style.cursor = 'pointer';
+  } else {
+    hoverLabel.classList.remove('visible');
+    renderer.domElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+  }
+
+  if (!isDragging) return;
+  const dx = e.clientX - previousMouse.x;
+  const dy = e.clientY - previousMouse.y;
+  rotationVelocity.x = dy * 0.003;
+  rotationVelocity.y = dx * 0.003;
+  globeGroup.rotation.x += rotationVelocity.x;
+  globeGroup.rotation.y += rotationVelocity.y;
+  previousMouse = { x: e.clientX, y: e.clientY };
+});
+
+window.addEventListener('pointerup', () => { isDragging = false; });
+
+// Click detection
+renderer.domElement.addEventListener('click', e => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(markerMeshes);
+  if (hits.length > 0) {
+    openModal(DESTINATIONS[hits[0].object.userData.destIndex]);
+  }
+});
+
+/* =========================================================================
+   MODAL
+   ========================================================================= */
+
+function openModal(dest) {
+  modalTitle.textContent = dest.name;
+  modalGallery.innerHTML = '';
+  dest.images.forEach(src => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = dest.name;
+    img.loading = 'lazy';
+    modalGallery.appendChild(img);
+  });
+  modalDescription.innerHTML = dest.description;
+  modalOverlay.classList.add('open');
+}
+
+function closeModal() {
+  modalOverlay.classList.remove('open');
+}
+
+modalClose.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', e => {
+  if (e.target === modalOverlay) closeModal();
+});
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* =========================================================================
+   ANIMATION LOOP
+   ========================================================================= */
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (!isDragging) {
+    // Dampen velocity
+    rotationVelocity.x *= 0.95;
+    rotationVelocity.y *= 0.95;
+    globeGroup.rotation.x += rotationVelocity.x;
+    globeGroup.rotation.y += rotationVelocity.y;
+
+    // Slow auto-rotation if no interaction
+    if (autoRotate) {
+      globeGroup.rotation.y += 0.00015;
+    } else if (Math.abs(rotationVelocity.x) < 0.0001 && Math.abs(rotationVelocity.y) < 0.0001) {
+      autoRotate = true;
+    }
+  }
+
+  // Keep glow ring facing camera
+  glowRing.lookAt(camera.position);
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+/* =========================================================================
+   RESIZE
+   ========================================================================= */
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
 </body>
+</html>

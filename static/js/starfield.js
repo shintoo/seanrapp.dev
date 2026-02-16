@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const DAMPING = 0.998;
   const SOFT_MIN = 20;
   const MAX_SPEED = 2.5;
-  const DT = .15;
+  const DT = .85;
   const SPREAD = 100;
 
   const systems = [];
@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       let vx = 0, vy = 0;
       if (count > 1) {
-        vx = -Math.sin(angle) * 0.3;
-        vy = Math.cos(angle) * 0.3;
+        vx = -0.5 + Math.random();
+        vy = -0.5 + Math.random();
       }
 
       const star = { el, mass: size, x, y, vx, vy };

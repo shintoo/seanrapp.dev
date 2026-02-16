@@ -85,16 +85,18 @@
       z-index: 100;
       align-items: center;
       justify-content: center;
+      opacity: 0.0;
+      transition: opacity 0.5s ease;
     }
 
     .article-modal-overlay.active {
       display: flex;
+      opacity: 1.0;
     }
 
     .article-modal {
       position: relative;
-      background: black;
-      border: 1px solid white;
+      background: rgba(0, 0, 0, 0.85);
       width: 700px;
       max-width: 90vw;
       height: 90vh;
@@ -104,6 +106,7 @@
       font-family: Ubuntu, Droid Sans Mono, sans-serif;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.5);
     }
 
     .article-modal::-webkit-scrollbar {
@@ -206,6 +209,7 @@
 
       const svg = document.getElementById('orbit-paths');
       const overlay = document.getElementById('article-modal-overlay');
+      const modal = document.getElementById('article-modal');
       const modalContent = document.getElementById('article-modal-content');
       const modalClose = document.getElementById('article-modal-close');
 
@@ -279,6 +283,8 @@
             if (mainContent) {
               modalContent.innerHTML = mainContent.innerHTML;
             }
+            modal.scrollTop = 0;
+            overlay.scrollTop = 0;
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
           });
