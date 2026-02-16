@@ -3,13 +3,17 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../main.css">
+  <link rel="stylesheet" href="/main.css">
   <link rel="stylesheet" href="budd-e.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="../static/js/navigation.js"></script>
   <script src="../static/js/starfield.js"></script>
   <script src="../static/js/utils.js"></script>
   <style>
+    .main {
+      max-width: 90vw !important;
+    }
+
     .solar-system {
       position: relative;
       width: 100%;
@@ -74,56 +78,6 @@
       box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
     }
 
-    .article-modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.65);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.0;
-      transition: opacity 0.5s ease;
-    }
-
-    .article-modal-overlay.active {
-      display: flex;
-      opacity: 1.0;
-    }
-
-    .article-modal {
-      position: relative;
-      background: rgba(0, 0, 0, 0.85);
-      width: 700px;
-      max-width: 90vw;
-      height: 90vh;
-      overflow-y: auto;
-      padding: 40px 32px 32px;
-      line-height: 1.8;
-      font-family: Ubuntu, Droid Sans Mono, sans-serif;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.5);
-    }
-
-    .article-modal::-webkit-scrollbar {
-      display: none;
-    }
-
-    .imgc {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .imgc img {
-      max-width: 60%;
-    }
-
     @media (max-width: 768px) {
       .article-modal {
         width: 95vw;
@@ -132,23 +86,6 @@
       }
     }
 
-    .article-modal-close {
-      position: absolute;
-      top: 10px;
-      right: 14px;
-      color: white;
-      font-family: monospace;
-      font-size: 20px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      z-index: 101;
-      padding: 4px 8px;
-    }
-
-    .article-modal-close:hover {
-      color: #aaa;
-    }
   </style>
 </head>
 
@@ -159,13 +96,7 @@
       <a href="/index.html" class="central-star nav-link"></a>
       <a class="planet" id="planet-0"><span class="tooltip">BUDD-E: An emotional robot</span></a>
       <a class="planet" id="planet-1"><span class="tooltip">Stereoscopy and other visual curiosities</span></a>
-    </div>
-
-    <div class="article-modal-overlay" id="article-modal-overlay">
-      <div class="article-modal" id="article-modal">
-        <button class="article-modal-close" id="article-modal-close">&times;</button>
-        <div class="article-modal-content" id="article-modal-content"></div>
-      </div>
+      <!-- <a class="planet" id="planet-2"><span class="tooltip">Not alone in the universe, but lonely</span></a> -->
     </div>
   </div>
 
@@ -190,8 +121,8 @@
           title: 'BUDD-E: An emotional robot',
           href: '/thoughts/budd-e.html',
           size: 10,
-          semiMajorAxis: 0.30,
-          semiMinorAxis: 0.10,
+          semiMajorAxis: 0.20,
+          semiMinorAxis: 0.08,
           speed: 0.3,
           startAngle: Math.PI * Math.random() * 2
         },
@@ -200,6 +131,17 @@
           title: 'Stereoscopy and other visual curiosities',
           href: '/thoughts/stereo.html',
           size: 14,
+          semiMajorAxis: 0.35,
+          semiMinorAxis: 0.13,
+          speed: 0.2,
+          startAngle: Math.PI * Math.random() * 2,
+        },
+        {
+          id: 'planet-2',
+          hidden: true,
+          title: 'Not alone in the universe, but lonely',
+          href: '/thoughts/not-alone-but-lonely.html',
+          size: 18,
           semiMajorAxis: 0.45,
           semiMinorAxis: 0.2,
           speed: 0.2,
@@ -208,12 +150,8 @@
       ];
 
       const svg = document.getElementById('orbit-paths');
-      const overlay = document.getElementById('article-modal-overlay');
-      const modal = document.getElementById('article-modal');
-      const modalContent = document.getElementById('article-modal-content');
-      const modalClose = document.getElementById('article-modal-close');
 
-      if (!svg || !overlay || !modalContent || !modalClose) return;
+      if (!svg) return;
 
       const angles = articles.map(a => a.startAngle);
 
@@ -227,6 +165,9 @@
         svg.innerHTML = '';
 
         articles.forEach(article => {
+          if (article.hidden) {
+            return;
+          }
           const a = article.semiMajorAxis * w;
           const b = article.semiMinorAxis * h;
           const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
@@ -273,46 +214,14 @@
         _solarSystemAnimationId = requestAnimationFrame(updatePlanets);
       }
 
-      function openArticleModal(href) {
-        fetch(href)
-          .then(r => r.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const mainContent = doc.querySelector('.main');
-            if (mainContent) {
-              modalContent.innerHTML = mainContent.innerHTML;
-            }
-            modal.scrollTop = 0;
-            overlay.scrollTop = 0;
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-          });
-      }
-
-      function closeArticleModal() {
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-        modalContent.innerHTML = '';
-      }
-
       // Planet click handlers
       articles.forEach(article => {
         const el = document.getElementById(article.id);
         if (!el) return;
         el.addEventListener('click', (e) => {
           e.preventDefault();
-          openArticleModal(article.href);
+          loadPage(article.href);
         });
-      });
-
-      // Modal close handlers
-      modalClose.addEventListener('click', closeArticleModal);
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeArticleModal();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeArticleModal();
       });
 
       // Init

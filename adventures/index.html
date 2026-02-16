@@ -31,24 +31,8 @@
     position: fixed;
     inset: 0;
     z-index: 1;
+    touch-action: none;
   }
-
-  #sun {
-    border-radius: 100%;
-    background: white;
-    width: 30px;
-    height: 30px;
-    z-index: 10;
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transition: box-shadow 0.2s ease;
-  }
-
-  #sun:hover {
-    box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
-  }
-
   canvas { display: block; }
 
   /* Tooltip on hover */
@@ -196,13 +180,6 @@
     text-transform: uppercase;
     pointer-events: none;
   }
-
-  @media (max-width: 768px) {
-    #sun {
-      top: 10px;
-      left: 48%;
-    }
-  }
 </style>
 </head>
 <body>
@@ -253,6 +230,14 @@ const DESTINATIONS = [
     description: ``,
   },
   {
+    name: "Seattle, Washington",
+    lat: 46.8507,
+    lng: -121.7611,
+    images: [
+    ],
+    description: ``,
+  },
+  {
     name: "Cancun, Mexico",
     lat: 20.6778,
     lng: -88.5671,
@@ -260,6 +245,15 @@ const DESTINATIONS = [
     ],
     description: ``,
   },
+  {
+    name: "San Francisco, California",
+    lat: 37.8091,
+    lng: -122.4129,
+    images: [
+    ],
+    description: ``,
+  },
+
   {
     name: "Paris, France",
     year: 2013,

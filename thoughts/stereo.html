@@ -3,18 +3,20 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../main.css">
+  <link rel="stylesheet" href="/main.css">
   <script src="../static/js/starfield.js"></script>
   <script src="../static/js/navigation.js"></script>
   <script src="../static/js/utils.js"></script>
 </head>
 
-<body>
+<body> 
   <div class="main">
+    <a href="/thoughts/index.html"><div id="sun"></div></a>
     <div class="blog-header">
       <span class="title">Stereoscopy and other visual curiosities</span>
       <span class="date">2024-12-13</span>
-      </span>
+    </div>
+    <div class="blog">
       <p>
         Remember when the rumors of the 3DS came out, a million moons ago?
       </p>
@@ -106,23 +108,14 @@
 
       <ul>
         <li>Look at something far away, off to the side from your screen. Then, shift your eyes back to the
-          screen <i>without</i>
-          <button class="tooltip" onclick="openModal('focus-modal')">refocusing</button>
-          <div id="focus-modal" class="modal">
-            <div class="modal-content">
-              <p>
+          screen <i>without</i> <span class="tooltip-blog-parent">refocusing.
+            <div class="tooltip-blog">
                 While I say "without refocusing", I really mean without reconverging
                 your eyes such that the line of sight for each intersects at your screen. <i>Focusing</i>
                 your eye is done by muscles inside your eye that stretch and relax the lens behind your
                 pupil; aiming your eyes is done of course with muscles outside of your eye. You can be focused
                 at, for example, 1 foot, while the lines of sight for your eyes simultaneously converging at 2 feet.
-              </p>
-              <button class="button" onclick="closeModal('focus-modal')">
-                <div class="check">&#10004;</div>
-                OK
-              </button>
-            </div>
-          </div>
+          </div></span>
           on the screen
         </li>
         <li>If you're using a phone/small laptop/etc, move the screen out of the way and look at something far.
