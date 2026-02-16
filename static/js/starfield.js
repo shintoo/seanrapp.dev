@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.prepend(container);
   }
 
+  // If we already have a starfield, don't regenerate
+  let _star = document.querySelector('.star');
+  if (_star) {
+    console.log("got star")
+    return;
+  }
+
   let W = window.innerWidth;
   let H = window.innerHeight;
   const SYSTEM_COUNT = 120;

@@ -26,7 +26,7 @@ const loadPage = async (url) => {
         if (typeof initSolarSystem === 'function') {
           initSolarSystem();
         }
-      }, 250);
+      }, 50);
     }
     return Promise.resolve();
   } catch (error) {
@@ -36,67 +36,18 @@ const loadPage = async (url) => {
   }
 };
 
-const setActiveMenuItem = (url) => {
-  // Remove active class from all menu items
-  document.querySelectorAll('.side-menu .item').forEach(item => {
-    item.classList.remove('active');
-  });
-
-  // Determine which menu item should be active
-  let activeItem = null;
-
-  if (!url || url === '/') {
-    // Home page - no active menu item
-    return;
-  }
-
-  // Find the matching menu item
-  document.querySelectorAll('.side-menu .item').forEach(item => {
-    const href = item.getAttribute('href');
-    if (href && (url === href || url.startsWith(href.replace('index.html', '')))) {
-      activeItem = item;
-    }
-  });
-
-  // Add active class to the matching item
-  if (activeItem) {
-    activeItem.classList.add('active');
-  }
-};
-
-const loadHomePage = () => {
-  const homeContent = `
-    <div class="item" style="cursor: default;">
-      <img class="icon" src="/static/img/bio.png" />
-      <div class="title">Bio</div>
-
-    </div>
-    <div class="item" style="cursor: default;">
-      <img class="icon" src="/static/img/compass2.png" />
-      <div class="title">Quest Log</div>
-
-    </div>
-    <div class="item" style="cursor: default;">
-      <img class="icon" src="/static/img/journal.png" />
-      <div class="title">Journal</div>
-
-    </div>
-  `;
-  document.querySelector('.main').innerHTML = homeContent;
-  setActiveMenuItem('/');
-};
-
 const initSPANavigation = () => {
-  // Add click handlers to side-menu links
-  document.querySelectorAll('.side-menu .item').forEach(link => {
+  // Add click handlers to nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    console.log("handling nav link");
     link.addEventListener('click', (e) => {
+      console.log("handling nav link click");
       e.preventDefault();
       const url = link.getAttribute('href');
 
       // Handle home link
       if (url === '/' || link.classList.contains('home-link')) {
         history.pushState({ url: '/' }, '', '/');
-        loadHomePage();
         return;
       }
 
@@ -131,14 +82,10 @@ const initSPANavigation = () => {
     });
   } else {
     // Other pages - fetch and load content
-    loadPage(currentPath).then(() => {
-      setActiveMenuItem(currentPath);
-    }).catch(() => {
-      // If page not found, load bio page
+    loadPage(currentPath).catch(() => {
+      // If page not found, load home page
       history.replaceState({ url: '/index.html' }, '', '/index.html');
-      loadPage('/index.html').then(() => {
-        setActiveMenuItem('/index.html');
-      });
+      loadPage('/index.html')
     });
   }
 };
