@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const DAMPING = 0.998;
   const SOFT_MIN = 20;
   const MAX_SPEED = 2.5;
-  const DT = .85;
+  const DT = .05;
   const SPREAD = 100;
 
   const systems = [];

@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>adventures</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
-
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
@@ -43,7 +41,12 @@
     z-index: 10;
     position: absolute;
     top: 50%;
-    left: 0;
+    left: 10px;
+    transition: box-shadow 0.2s ease;
+  }
+
+  #sun:hover {
+    box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
   }
 
   canvas { display: block; }
@@ -53,20 +56,21 @@
     position: fixed;
     z-index: 10;
     pointer-events: none;
-    font-family: 'Instrument Serif', serif;
+    font-family: monospace;
     font-size: 1rem;
-    color: var(--white);
-    background: rgba(10,10,10,0.8);
-    backdrop-filter: blur(6px);
-    border: 1px solid var(--white-faint);
     padding: 6px 14px;
-    border-radius: 4px;
     opacity: 0;
     transition: opacity 0.2s;
     white-space: nowrap;
+    border: 1px solid white;
+    background: black;
   }
 
   #hover-label.visible { opacity: 1; }
+
+  .year {
+    opacity: 0.5;
+  }
 
   /* Modal overlay */
   #modal-overlay {
@@ -89,9 +93,8 @@
   }
 
   #modal {
-    background: #111;
-    border: 1px solid rgba(232, 228, 223, 0.1);
-    border-radius: 8px;
+    background: black;
+    border: 1px solid white;
     max-width: 680px;
     width: 92vw;
     max-height: 85vh;
@@ -111,27 +114,22 @@
     top: 0;
     float: right;
     z-index: 5;
-    margin: 16px 16px 0 0;
-    background: rgba(10,10,10,0.7);
-    backdrop-filter: blur(4px);
-    border: 1px solid var(--white-faint);
-    color: var(--white);
+    margin: 16px 16px 0 0; 
+    color: white;
+    background: black;
     width: 36px;
     height: 36px;
-    border-radius: 50%;
     font-size: 1.1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    border: none;
   }
 
-  #modal-close:hover { background: rgba(232,228,223,0.1); }
-
   #modal-title {
-    font-family: 'Instrument Serif', serif;
-    font-size: 2rem;
+    font-family: monospace;
+    font-size: 1rem;
     font-weight: 400;
     padding: 40px 36px 8px;
     line-height: 1.2;
@@ -198,6 +196,13 @@
     text-transform: uppercase;
     pointer-events: none;
   }
+
+  @media (max-width: 768px) {
+    #sun {
+      top: 10px;
+      left: 48%;
+    }
+  }
 </style>
 </head>
 <body>
@@ -247,9 +252,35 @@ const DESTINATIONS = [
     ],
     description: ``,
   },
-
   {
-    name: "Tokyo - 2017",
+    name: "Cancun, Mexico",
+    lat: 20.6778,
+    lng: -88.5671,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Paris, France",
+    year: 2013,
+    lat:48.8598,
+    lng: 2.3267,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "New Orleans, Louisiana",
+    year: 2014,
+    lat: 29.9579,
+    lng: -90.0639,
+    images: [
+    ],
+    description: ``,
+  },
+  {
+    name: "Tokyo, Japan",
+    year: "2017",
     lat: 35.6762,
     lng: 139.6503,
     images: [
@@ -257,15 +288,8 @@ const DESTINATIONS = [
     description: ``,
   },
   {
-    name: "Kyoto - 2017",
-    lat: 35.0303,
-    lng: 135.7734,
-    images: [
-    ],
-    description: ``,
-  },
-  {
-    name: "Cosby, Tennesee - 2019",
+    name: "Cosby, Tennesee",
+    year: "2019",
     lat: 35.7026,
     lng: -83.3577,
     images: [
@@ -273,7 +297,8 @@ const DESTINATIONS = [
     description: ``,
   },
   {
-    name: "Portland, Oregon - 2020",
+    name: "Portland, Oregon",
+    year: "2020",
     lat: 45.523,
     lng: -122.6811,
     images: [
@@ -281,7 +306,8 @@ const DESTINATIONS = [
     description: ``,
   },
   {
-    name: "Asheville, North Carolina - 2021",
+    name: "Asheville, North Carolina",
+    year: "2021",
     lat: 35.4829,
     lng: -82.6242,
     images: [
@@ -289,7 +315,8 @@ const DESTINATIONS = [
     description: ``,
   },
   {
-    name: "New York - 2022",
+    name: "New York, New York",
+    year: "2022",
     lat: 40.7606, 
     lng: -73.9855,
     images: [
@@ -297,7 +324,8 @@ const DESTINATIONS = [
     description: ``,
   },
   {
-    name: "Washington, D.C. - 2022",
+    name: "Washington, D.C.",
+    year: "2022",
     lat: 38.8970,
     lng:  -77.0033,
     images: [
@@ -306,7 +334,8 @@ const DESTINATIONS = [
   },
 
   {
-    name: "Harper's Ferry, West Virginia - 2023",
+    name: "Harper's Ferry, West Virginia",
+    year: "2023",
     lat: 39.3229,
     lng: -77.7284,
     images: [
@@ -315,16 +344,18 @@ const DESTINATIONS = [
   },
 
   {
-    name: "Iceland - 2024",
+    name: "Iceland",
+    year: "2024",
     lat: 64.1466,
-    lng: -21.9426,
+    lng: -19.5,
     images: [
     ],
     description: ``,
   },
 
   {
-    name: "Los Angeles, California - 2024",
+    name: "Los Angeles, California",
+    year: "2024",
     lat: 34.0119,
     lng: -118.4952,
     images: [
@@ -333,7 +364,8 @@ const DESTINATIONS = [
   },
 
   {
-    name: "Japan - 2024",
+    name: "Japan",
+    year: "2024",
     lat: 35.0118,
     lng: 135.7715,
     images: [
@@ -342,7 +374,8 @@ const DESTINATIONS = [
   },
 
   {
-    name: "South Korea - 2024",
+    name: "South Korea",
+    year: "2024",
     lat: 35.1512,
     lng: 129.1169,
     images: [
@@ -351,7 +384,8 @@ const DESTINATIONS = [
   },
 
   {
-    name: "Lisboa, Portugal - 2025",
+    name: "Lisboa, Portugal",
+    year: "2025",
     lat: 38.7139,
     lng: -9.1335,
     images: [
@@ -360,7 +394,8 @@ const DESTINATIONS = [
   },
 
   {
-    name: "Miami, Florida - 2025",
+    name: "Miami, Florida",
+    year: "2025",
     lat: 25.7684,
     lng: -80.1880,
     images: [
@@ -368,7 +403,8 @@ const DESTINATIONS = [
     description: ``,
   },
   {
-    name: "O'ahu, Hawai'i - 2025",
+    name: "O'ahu, Hawai'i",
+    year: "2025",
     lat: 21.6184,
     lng: -158.0855,
     images: [
@@ -376,15 +412,17 @@ const DESTINATIONS = [
     description: ``,
   },
   {
-    name: "Philadelphia, Pennsylvania - 2025",
-    lat: -39.9659,
-    lng: 75.1809,
+    name: "Philadelphia, Pennsylvania",
+    year: "2025",
+    lat: 39.9659,
+    lng: -75.1809,
     images: [
     ],
     description: ``,
   },
   {
-    name: "Lancaster, Pennsylvania - 2025",
+    name: "Lancaster, Pennsylvania",
+    year: "2025",
     lat: 40.0437,
     lng: -76.3072,
     images: [
@@ -486,12 +524,14 @@ fetch(GEO_URL)
    ========================================================================= */
 
 const markerMeshes = [];
+const markerScalables = []; // rings, dots, and hit spheres that should maintain screen size
 const MARKER_RADIUS = 0.02;
+const INITIAL_CAM_Z = camera.position.z;
 
 DESTINATIONS.forEach((dest, i) => {
   const pos = latLngToVec3(dest.lat, dest.lng, GLOBE_RADIUS + 0.006);
 
-  // Outer ring
+  /* Outer ring
   const ring = new THREE.Mesh(
     new THREE.RingGeometry(MARKER_RADIUS * 0.6, MARKER_RADIUS, 24),
     new THREE.MeshBasicMaterial({ color: 0xe8e4df, transparent: true, opacity: 0.9, side: THREE.DoubleSide })
@@ -499,25 +539,38 @@ DESTINATIONS.forEach((dest, i) => {
   ring.position.copy(pos);
   ring.lookAt(new THREE.Vector3(0, 0, 0));
   globeGroup.add(ring);
+ */
 
-  // Inner dot
+  const box = new THREE.Mesh(
+    new THREE.PlaneGeometry(MARKER_RADIUS, MARKER_RADIUS, 2, 2),
+    new THREE.MeshBasicMaterial({ color: 0xe8e4df, transparent: true, opacity: 0.9, side: THREE.DoubleSide, wireframe: false})
+  );
+  box.position.copy(pos);
+  box.lookAt(new THREE.Vector3(0, 0, 0));
+  globeGroup.add(box);
+
+  /* Inner dot
   const dot = new THREE.Mesh(
-    new THREE.CircleGeometry(MARKER_RADIUS * 0.15, 16),
-    new THREE.MeshBasicMaterial({ color: 0xe8e4df, side: THREE.DoubleSide })
+    new THREE.PlaneGeometry(MARKER_RADIUS * 0.75, MARKER_RADIUS * 0.75, 2, 2),
+    new THREE.MeshBasicMaterial({ color: 0, side: THREE.DoubleSide })
   );
   dot.position.copy(pos);
+  dot.position.z += 0.00001;
   dot.lookAt(new THREE.Vector3(0, 0, 0));
   globeGroup.add(dot);
+  */
 
   // Invisible hit-target sphere for raycasting
   const hitSphere = new THREE.Mesh(
-    new THREE.SphereGeometry(MARKER_RADIUS * 2.5, 12, 12),
+    new THREE.SphereGeometry(MARKER_RADIUS * 1.5, 12, 12),
     new THREE.MeshBasicMaterial({ visible: false })
   );
   hitSphere.position.copy(pos);
   hitSphere.userData = { destIndex: i };
   globeGroup.add(hitSphere);
   markerMeshes.push(hitSphere);
+
+  markerScalables.push(box, hitSphere);
 });
 
 /* =========================================================================
@@ -547,7 +600,9 @@ renderer.domElement.addEventListener('pointermove', e => {
 
   if (hits.length > 0) {
     const dest = DESTINATIONS[hits[0].object.userData.destIndex];
-    hoverLabel.textContent = dest.name;
+    hoverLabel.innerHTML = dest.year ?
+      `${dest.name} <span class="year">${dest.year}</span>`
+      : `${dest.name}`;
     hoverLabel.style.left = e.clientX + 14 + 'px';
     hoverLabel.style.top = e.clientY - 14 + 'px';
     hoverLabel.classList.add('visible');
@@ -569,6 +624,12 @@ renderer.domElement.addEventListener('pointermove', e => {
 
 window.addEventListener('pointerup', () => { isDragging = false; });
 
+// Scroll to zoom
+renderer.domElement.addEventListener('wheel', e => {
+  e.preventDefault();
+  camera.position.z = Math.max(1.8, Math.min(6, camera.position.z + e.deltaY * 0.002));
+}, { passive: false });
+
 // Click detection
 renderer.domElement.addEventListener('click', e => {
   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -585,7 +646,10 @@ renderer.domElement.addEventListener('click', e => {
    ========================================================================= */
 
 function openModal(dest) {
-  modalTitle.textContent = dest.name;
+  modalTitle.innerHTML = dest.year ?
+      `${dest.name} <span class="year">${dest.year}</span>`
+      : `${dest.name}`;
+
   modalGallery.innerHTML = '';
   dest.images.forEach(src => {
     const img = document.createElement('img');
@@ -631,6 +695,10 @@ function animate() {
       autoRotate = true;
     }
   }
+
+  // Scale markers to maintain constant screen size
+  const s = camera.position.z / INITIAL_CAM_Z;
+  markerScalables.forEach(m => m.scale.setScalar(s));
 
   // Keep glow ring facing camera
   glowRing.lookAt(camera.position);
