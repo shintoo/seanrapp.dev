@@ -125,9 +125,9 @@ const initSPANavigation = () => {
   const currentPath = window.location.pathname;
   if (!currentPath || currentPath === '/' || currentPath === '/index.html') {
     // Home page - load bio by default
-    history.replaceState({ url: '/home.html' }, '', '/home.html');
-    loadPage('/home.html').then(() => {
-      setActiveMenuItem('/home.html');
+    history.replaceState({ url: '/index.html' }, '', '/index.html');
+    loadPage('/index.html').then(() => {
+      setActiveMenuItem('/index.html');
     });
   } else {
     // Other pages - fetch and load content
@@ -135,9 +135,9 @@ const initSPANavigation = () => {
       setActiveMenuItem(currentPath);
     }).catch(() => {
       // If page not found, load bio page
-      history.replaceState({ url: '/home.html' }, '', '/home.html');
-      loadPage('/home.html').then(() => {
-        setActiveMenuItem('/home.html');
+      history.replaceState({ url: '/index.html' }, '', '/index.html');
+      loadPage('/index.html').then(() => {
+        setActiveMenuItem('/index.html');
       });
     });
   }
