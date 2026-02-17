@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ── Projection center: Summer Triangle centroid ────────── */
   const CENTER_RA  = 296.25;  // degrees
   const CENTER_DEC = 30.9;    // degrees
-  const FOV_DEG    = 80;      // horizontal field of view in degrees
+  const FOV_DEG    = 120;      // horizontal field of view in degrees
 
   /* ── Convert degrees to radians ─────────────────────────── */
   const DEG = Math.PI / 180;

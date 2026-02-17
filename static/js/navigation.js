@@ -84,11 +84,21 @@ const initSPANavigation = () => {
 
     // Load the new content and update active state
     loadPage(url);
+
+    // Hide star-links when not on the home page
+    const isHome = url === '/' || url === '/index.html';
+    document.querySelectorAll('.star-link').forEach(el => {
+      el.style.display = isHome ? '' : 'none';
+    });
   });
 
   // Handle browser back/forward buttons
   window.addEventListener('popstate', (e) => {
-    if (e.state && e.state.url && e.state.url !== '/') {
+    const isHome = !e.state || !e.state.url || e.state.url === '/' || e.state.url === '/index.html';
+    document.querySelectorAll('.star-link').forEach(el => {
+      el.style.display = isHome ? '' : 'none';
+    });
+    if (!isHome) {
       loadPage(e.state.url)
     } else {
       loadHomePage();
@@ -101,6 +111,7 @@ const initSPANavigation = () => {
     history.replaceState({ url: '/index.html' }, '', '/index.html');
     loadPage('/index.html')
   } else {
+    document.querySelectorAll('.star-link').forEach(el => el.style.display = 'none');
     // Other pages - fetch and load content
     loadPage(currentPath).catch(() => {
       history.replaceState({ url: '/index.html' }, '', '/index.html');
