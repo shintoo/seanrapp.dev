@@ -220,219 +220,7 @@ import * as THREE from 'three';
                    You can use <p>, <a>, <em>, <strong>, etc.
    ========================================================================= */
 
-const DESTINATIONS = [
-  {
-    name: "Orlando",
-    lat: 28.5721,
-    lng: -81.3683,
-    images: [
-    ],
-    description: `Hometown :-)`,
-  },
-  {
-    name: "Seattle, Washington",
-    lat: 46.8507,
-    lng: -121.7611,
-    images: [
-    ],
-    description: `Went here as a kid - all I remember is "hiking to the top of Mt. Rainier" (we definitely did not do that).
-    But we hiked in the (July) snow, got turned around, and I slipped and fell so many times I found it hilarious. I still have
-    the 3-foot-tall hiking pole from this trip.`,
-  },
-  {
-    name: "Cancun, Mexico",
-    lat: 20.6778,
-    lng: -88.5671,
-    images: [
-    ],
-    description: `Visited with my family when I was young, we enjoyed the beach and visiting Chichén Itzá.`,
-  },
-  {
-    name: "San Francisco, California",
-    lat: 37.8091,
-    lng: -122.4129,
-    images: [
-    ],
-    description: `Visited with family when I was in middle school. I don't remember too much, but the hills and finding the city beautiful. Have to go back soon.`,
-  },
-
-  {
-    name: "Paris, France",
-    year: 2013,
-    lat:48.8598,
-    lng: 2.3267,
-    images: [
-    ],
-    description: `First time in Europe. Especially loved the Musée d'Orsay. The apartment we stayed in was so hot.`,
-  },
-  {
-    name: "New Orleans, Louisiana",
-    year: 2014,
-    lat: 29.9579,
-    lng: -90.0639,
-    images: [
-    ],
-    description: `Rode streetcars, got beignets, visited the cemetery on a cold windy day.`,
-  },
-  {
-    name: "Tokyo, Japan",
-    year: "2017",
-    lat: 35.6762,
-    lng: 139.6503,
-    images: [
-    ],
-    description: `Did a semester abroad as a Junior in college, studying Japanese mostly, at Meikai University in Urayasu.
-    I lived about a 12 minute walk from Higashi Funabashi station on JR's Chuo-Soubu line. Very much enjoyed going to Taito arcades,
-    the shrine up the street from my dorm, and exploring Tokyo. Absolute best spot was the observation deck at Odaiba. Also enjoyed 
-    a ~weeklong trip to Kyoto during Christmas.`,
-  },
-  {
-    name: "Cosby, Tennesee",
-    year: "2019",
-    lat: 35.7026,
-    lng: -83.3577,
-    images: [
-    ],
-    description: `My first roadtrip <i>not</i> with my family. We had an absolutely splendid time, staying in a charming house adjacent to GSMNP.
-    Hiked Ramsey Cascades, drove along Foothills Parkway, and had a great time.`,
-  },
-  {
-    name: "Portland, Oregon",
-    year: "2020",
-    lat: 45.523,
-    lng: -122.6811,
-    images: [
-    ],
-    description: `We mostly stayed in the city here, visiting Powell's bookstore, the Japanese gardens (after a lovely long walk to it), and exploring via streetcar. The gondola was
-    quite a ride as well.`,
-  },
-  {
-    name: "Asheville, North Carolina",
-    year: "2021",
-    lat: 35.4829,
-    lng: -82.6242,
-    images: [
-    ],
-    description: `This was our second GSMNP road trip. Stayed in a hotel in downtown Asheville, which was a lovely little downtown. Various short hikes (Catawba falls, Lake Powhatan),
-    and ziplined with Navitat.`,
-  },
-  {
-    name: "New York, New York",
-    year: "2022",
-    lat: 40.7606, 
-    lng: -73.9855,
-    images: [
-    ],
-    description: `Saw Hadestown at the Walter Kerr, which is perhaps my favorite musical. Did the usual NYC touristy things, and had a blast. Froze in the blizzard, though.`,
-  },
-  {
-    name: "Washington, D.C.",
-    year: "2022",
-    lat: 38.8970,
-    lng:  -77.0033,
-    images: [
-    ],
-    description: `This was our trip to test the waters to see if we <i>might</i> want to move to the area. We stayed just outside of DC in Silver Spring, with a rental car.
-    Hiked Sugarloaf in MD, and <i>thoroughly</i> enjoyed exploring DC via the metro.`,
-  },
-
-  {
-    name: "Harper's Ferry, West Virginia",
-    year: "2023",
-    lat: 39.3229,
-    lng: -77.7284,
-    images: [
-    ],
-    description: ``,
-  },
-
-  {
-    name: "Iceland",
-    year: "2024",
-    lat: 64.1466,
-    lng: -19.5,
-    images: [
-    ],
-    description: `This was an awesome 4 day road (and ferry!) trip from Reykjavik, around the golden circle, to Vestmannaeyjar, and eventually to Vik.`,
-  },
-
-  {
-    name: "Los Angeles, California",
-    year: "2024",
-    lat: 34.0119,
-    lng: -118.4952,
-    images: [
-    ],
-    description: `I spent just a few days in Santa Monica, and running around LA, for my best friend's birthday. Hiked Malibu Creek State Park, visited Griffith Observatory.`,
-  },
-
-  {
-    name: "Japan",
-    year: "2024",
-    lat: 35.0118,
-    lng: 135.7715,
-    images: [
-    ],
-    description: ``,
-  },
-
-  {
-    name: "South Korea",
-    year: "2024",
-    lat: 35.1512,
-    lng: 129.1169,
-    images: [
-    ],
-    description: ``,
-  },
-
-  {
-    name: "Lisboa, Portugal",
-    year: "2025",
-    lat: 38.7139,
-    lng: -9.1335,
-    images: [
-    ],
-    description: ``,
-  },
-
-  {
-    name: "Miami, Florida",
-    year: "2025",
-    lat: 25.7684,
-    lng: -80.1880,
-    images: [
-    ],
-    description: ``,
-  },
-  {
-    name: "O'ahu, Hawai'i",
-    year: "2025",
-    lat: 21.6184,
-    lng: -158.0855,
-    images: [
-    ],
-    description: ``,
-  },
-  {
-    name: "Philadelphia, Pennsylvania",
-    year: "2025",
-    lat: 39.9659,
-    lng: -75.1809,
-    images: [
-    ],
-    description: ``,
-  },
-  {
-    name: "Lancaster, Pennsylvania",
-    year: "2025",
-    lat: 40.0437,
-    lng: -76.3072,
-    images: [
-    ],
-    description: ``,
-  },
-];
+let DESTINATIONS = [];
 
 
 /* =========================================================================
@@ -486,6 +274,8 @@ globeGroup.add(glowRing);
 
 /* =========================================================================
    GEOJSON — LOAD CONTINENT OUTLINES
+   =========================================================================
+   DESTINATION MARKERS
    ========================================================================= */
 
 function latLngToVec3(lat, lng, radius) {
@@ -498,40 +288,37 @@ function latLngToVec3(lat, lng, radius) {
   );
 }
 
-const GEO_URL = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson";
-
-fetch(GEO_URL)
-  .then(r => r.json())
-  .then(geo => {
-    const R = GLOBE_RADIUS + 0.001;
-    const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0});
-
-    geo.features.forEach(feature => {
-      const coords = feature.geometry.type === "Polygon"
-        ? [feature.geometry.coordinates]
-        : feature.geometry.coordinates; // MultiPolygon
-
-      coords.forEach(polygon => {
-        polygon.forEach(ring => {
-          const points = ring.map(([lng, lat]) => latLngToVec3(lat, lng, R));
-          const geometry = new THREE.BufferGeometry().setFromPoints(points);
-          globeGroup.add(new THREE.Line(geometry, material));
-        });
-      });
-    });
-  })
-  .catch(err => console.warn("Could not load land outlines:", err));
-
-/* =========================================================================
-   DESTINATION MARKERS
-   ========================================================================= */
-
 const markerMeshes = [];
 const markerScalables = []; // rings, dots, and hit spheres that should maintain screen size
 const MARKER_RADIUS = 0.02;
 const INITIAL_CAM_Z = camera.position.z;
 
-DESTINATIONS.forEach((dest, i) => {
+function initializeGlobe() {
+  const GEO_URL = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson";
+
+  fetch(GEO_URL)
+    .then(r => r.json())
+    .then(geo => {
+      const R = GLOBE_RADIUS + 0.001;
+      const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0});
+
+      geo.features.forEach(feature => {
+        const coords = feature.geometry.type === "Polygon"
+          ? [feature.geometry.coordinates]
+          : feature.geometry.coordinates; // MultiPolygon
+
+        coords.forEach(polygon => {
+          polygon.forEach(ring => {
+            const points = ring.map(([lng, lat]) => latLngToVec3(lat, lng, R));
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            globeGroup.add(new THREE.Line(geometry, material));
+          });
+        });
+      });
+    })
+    .catch(err => console.warn("Could not load land outlines:", err));
+
+  DESTINATIONS.forEach((dest, i) => {
   const pos = latLngToVec3(dest.lat, dest.lng, GLOBE_RADIUS + 0.006);
 
   /* Outer ring
@@ -574,7 +361,8 @@ DESTINATIONS.forEach((dest, i) => {
   markerMeshes.push(hitSphere);
 
   markerScalables.push(box, hitSphere);
-});
+  });
+}
 
 /* =========================================================================
    INTERACTION — DRAG TO ROTATE, CLICK MARKERS
@@ -720,6 +508,18 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+/* =========================================================================
+   LOAD DESTINATIONS AND INITIALIZE
+   ========================================================================= */
+
+fetch('./destinations.json')
+  .then(r => r.json())
+  .then(data => {
+    DESTINATIONS = data;
+    initializeGlobe();
+  })
+  .catch(err => console.error("Could not load destinations:", err));
 </script>
 </body>
 </html>
