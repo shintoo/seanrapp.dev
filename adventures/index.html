@@ -185,7 +185,7 @@
 <body>
 
 
-  <a href="/"><div id="sun"></div></a>
+<a href="/"><div id="sun"></div></a>
 <div id="canvas-container"></div>
 <div id="hover-label"></div>
 <div id="modal-overlay">
@@ -250,27 +250,53 @@ globeGroup.rotation.x = 0.5;
 globeGroup.rotation.y = -0.1;
 scene.add(globeGroup);
 
-// Globe sphere — dark with a faint white wireframe
+// Globe sphere with satellite imagery
 const GLOBE_RADIUS = 1;
+
+const textureLoader = new THREE.TextureLoader();
+const earthTexture = textureLoader.load('/static/img/world-topo-bathy-200407_5400x2700.jpg');
 
 const globeSolid = new THREE.Mesh(
   new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64),
-  new THREE.MeshBasicMaterial({ color: 0x0a0a0a })
+  new THREE.MeshBasicMaterial({ map: earthTexture })
 );
 globeGroup.add(globeSolid);
 
-const wireframe = new THREE.LineSegments(
-  new THREE.WireframeGeometry(new THREE.SphereGeometry(GLOBE_RADIUS, 24, 24)),
-  new THREE.LineBasicMaterial({ color: 0xe8e4df, transparent: true, opacity: 0.04 })
+const atmosphere = new THREE.Mesh(
+  new THREE.SphereGeometry(GLOBE_RADIUS * 1.01, 64, 64),
+  new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    uniforms: {
+      color: { value: new THREE.Color(0x6b93d6)},
+      densityCenter: { value: 0.15 },
+      densityEdge:   { value: 0.65 },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        vViewDir = normalize(-mvPos.xyz);
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 color;
+      uniform float densityCenter;
+      uniform float densityEdge;
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      void main() {
+        float facing = dot(vNormal, vViewDir);           // 1 at center, 0 at edge
+        float alpha = mix(densityEdge, densityCenter, facing);
+        gl_FragColor = vec4(color, alpha);
+      }
+    `,
+  })
 );
-globeGroup.add(wireframe);
-
-// Outer glow ring
-const glowRing = new THREE.Mesh(
-  new THREE.RingGeometry(GLOBE_RADIUS, GLOBE_RADIUS + 0.065, 128),
-  new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, side: THREE.DoubleSide })
-);
-globeGroup.add(glowRing);
+globeGroup.add(atmosphere);
 
 /* =========================================================================
    GEOJSON — LOAD CONTINENT OUTLINES
@@ -294,43 +320,10 @@ const MARKER_RADIUS = 0.02;
 const INITIAL_CAM_Z = camera.position.z;
 
 function initializeGlobe() {
-  const GEO_URL = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson";
-
-  fetch(GEO_URL)
-    .then(r => r.json())
-    .then(geo => {
-      const R = GLOBE_RADIUS + 0.001;
-      const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0});
-
-      geo.features.forEach(feature => {
-        const coords = feature.geometry.type === "Polygon"
-          ? [feature.geometry.coordinates]
-          : feature.geometry.coordinates; // MultiPolygon
-
-        coords.forEach(polygon => {
-          polygon.forEach(ring => {
-            const points = ring.map(([lng, lat]) => latLngToVec3(lat, lng, R));
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            globeGroup.add(new THREE.Line(geometry, material));
-          });
-        });
-      });
-    })
-    .catch(err => console.warn("Could not load land outlines:", err));
-
   DESTINATIONS.forEach((dest, i) => {
   const pos = latLngToVec3(dest.lat, dest.lng, GLOBE_RADIUS + 0.006);
 
-  /* Outer ring
-  const ring = new THREE.Mesh(
-    new THREE.RingGeometry(MARKER_RADIUS * 0.6, MARKER_RADIUS, 24),
-    new THREE.MeshBasicMaterial({ color: 0xe8e4df, transparent: true, opacity: 0.9, side: THREE.DoubleSide })
-  );
-  ring.position.copy(pos);
-  ring.lookAt(new THREE.Vector3(0, 0, 0));
-  globeGroup.add(ring);
- */
-
+  // Map marker for each location
   const box = new THREE.Mesh(
     new THREE.PlaneGeometry(MARKER_RADIUS, MARKER_RADIUS, 2, 2),
     new THREE.MeshBasicMaterial({ color: 0xe8e4df, transparent: true, opacity: 0.9, side: THREE.DoubleSide, wireframe: false})
@@ -338,17 +331,6 @@ function initializeGlobe() {
   box.position.copy(pos);
   box.lookAt(new THREE.Vector3(0, 0, 0));
   globeGroup.add(box);
-
-  /* Inner dot
-  const dot = new THREE.Mesh(
-    new THREE.PlaneGeometry(MARKER_RADIUS * 0.75, MARKER_RADIUS * 0.75, 2, 2),
-    new THREE.MeshBasicMaterial({ color: 0, side: THREE.DoubleSide })
-  );
-  dot.position.copy(pos);
-  dot.position.z += 0.00001;
-  dot.lookAt(new THREE.Vector3(0, 0, 0));
-  globeGroup.add(dot);
-  */
 
   // Invisible hit-target sphere for raycasting
   const hitSphere = new THREE.Mesh(
@@ -490,9 +472,6 @@ function animate() {
   // Scale markers to maintain constant screen size
   const s = camera.position.z / INITIAL_CAM_Z;
   markerScalables.forEach(m => m.scale.setScalar(s));
-
-  // Keep glow ring facing camera
-  glowRing.lookAt(camera.position);
 
   renderer.render(scene, camera);
 }
