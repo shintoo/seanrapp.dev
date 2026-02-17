@@ -28,11 +28,6 @@ a:hover {
   pointer-events: none;
 }
 
-.star {
-  position: absolute;
-  border-radius: 50%;
-  background: white;
-}
 
 .main {
   position: relative;
