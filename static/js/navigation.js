@@ -65,6 +65,17 @@ const loadPage = async (url) => {
 };
 
 const initSPANavigation = () => {
+  const currentPath = window.location.pathname;
+  const isHomePath = !currentPath || currentPath === '/' || currentPath === '/index.html';
+
+  // If a non-home page was loaded directly (without the shell), redirect to the
+  // shell so the starfield and star-links are initialized, then load the target page.
+  if (!isHomePath && !document.getElementById('starfield')) {
+    sessionStorage.setItem('_spa_redirect', currentPath);
+    window.location.replace('/');
+    return;
+  }
+
   // Use event delegation since nav links inside .main get replaced by loadPage
   document.addEventListener('click', (e) => {
     const link = e.target.closest('.nav-link');
@@ -106,16 +117,26 @@ const initSPANavigation = () => {
   });
 
   // Load content on initial page load
-  const currentPath = window.location.pathname;
-  if (!currentPath || currentPath === '/' || currentPath === '/index.html') {
+  const pendingPath = sessionStorage.getItem('_spa_redirect');
+  if (pendingPath) {
+    // Arrived here via a redirect from a directly-loaded non-home page.
+    // Load that page's content into .main now that the shell is initialized.
+    sessionStorage.removeItem('_spa_redirect');
+    history.replaceState({ url: pendingPath }, '', pendingPath);
+    document.querySelectorAll('.star-link').forEach(el => el.style.display = 'none');
+    loadPage(pendingPath).catch(() => {
+      history.replaceState({ url: '/index.html' }, '', '/index.html');
+      loadPage('/index.html');
+    });
+  } else if (isHomePath) {
     history.replaceState({ url: '/index.html' }, '', '/index.html');
-    loadPage('/index.html')
+    loadPage('/index.html');
   } else {
     document.querySelectorAll('.star-link').forEach(el => el.style.display = 'none');
     // Other pages - fetch and load content
     loadPage(currentPath).catch(() => {
       history.replaceState({ url: '/index.html' }, '', '/index.html');
-      loadPage('/index.html')
+      loadPage('/index.html');
     });
   }
 };
