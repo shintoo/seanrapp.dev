@@ -4,8 +4,13 @@ html, body {
   font-family: "Times New Roman";
 }
 
-p, ul {
-  font-size: 1.1rem;
+p {
+  text-indent: 20px;
+  margin-top: 16px;
+}
+
+sup {
+  line-height: 0;
 }
 
 a {
@@ -42,20 +47,43 @@ a:hover {
 }
 
 .blog-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-style: italic;
   margin: 2rem;
-  font-size: 1.4rem;
+  font-size: 32px;
+  letter-spacing: -1px;
+  text-align: center;
 }
 
 .blog-header .title {
+  margin-bottom: 10px;
 }
 
 .blog-header .date {
   opacity: 0.66;
+  font-size: 28px;
+}
+
+.cit {
+  text-decoration: none;
+  font-size: 0.8rem;
 }
 
 .blog {
-  max-width: max(700px, 4vw);
-  line-height: 1.45;
+  box-shadow: 0 0 5px 0px #fff6e4;
+  height: 98vh;
+  margin-top: 1vh;
+  overflow-y: scroll;
+  max-width: max(800px, 2vw);
+  background: #fff6e4;
+  color: #030201;
+  padding: 32px 120px;
+  font-size: 20px;
+  line-height: 27px;
+  font-family: "Times New Roman", PublicoText, Georgia, "Times New Roman", Times, Baskerville;
+  letter-spacing: -0.02em;
 }
 
 .tooltip-blog-parent {
@@ -108,6 +136,15 @@ a:hover {
 
 .imgc img {
   max-width: 60%;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 

@@ -96,7 +96,8 @@
       <a href="/index.html" class="central-star nav-link"></a>
       <a class="planet" id="planet-0"><span class="tooltip">BUDD-E: An emotional robot</span></a>
       <a class="planet" id="planet-1"><span class="tooltip">Stereoscopy and other visual curiosities</span></a>
-      <!-- <a class="planet" id="planet-2"><span class="tooltip">Not alone in the universe, but lonely</span></a> -->
+      <a class="planet" id="planet-2"><span class="tooltip">Your greatest impact</span></a>
+      <!-- <a class="planet" id="planet-3"><span class="tooltip">Not alone in the universe, but lonely</span></a> -->
     </div>
   </div>
 
@@ -138,9 +139,9 @@
         },
         {
           id: 'planet-2',
-          hidden: true,
-          title: 'Not alone in the universe, but lonely',
-          href: '/thoughts/not-alone-but-lonely.html',
+          hidden: false,
+          title: 'Your greatest impact',
+          href: '/thoughts/your-greatest-impact.html',
           size: 18,
           semiMajorAxis: 0.45,
           semiMinorAxis: 0.2,
@@ -220,6 +221,7 @@
         if (!el) return;
         el.addEventListener('click', (e) => {
           e.preventDefault();
+          history.pushState({ url: article.href }, '', article.href);
           loadPage(article.href);
         });
       });
