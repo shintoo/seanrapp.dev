@@ -12,6 +12,15 @@
       background: #000;
       width: 100vw;
       height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Extend the starfield slightly beyond the viewport so parallax
+       shifts never reveal a black gap at the edges. */
+    .starfield {
+      inset: -10px !important;
+      width: calc(100% + 20px) !important;
+      height: calc(100% + 20px) !important;
     }
 
     .star-link {
@@ -47,7 +56,7 @@
     }
 
     .star-link:hover {
-      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.75);
+      box-shadow: 0 0 16px 5px rgba(255, 255, 255, 0.75);
     }
   </style>
 
@@ -71,11 +80,19 @@
   <script src="/static/js/starfield.js"></script>
   <script>
     // Real coordinates of the Summer Triangle stars
+    // depth: parallax strength — higher = appears closer = more mouse movement
+    // Background canvas implicitly has depth 0 (no movement relative to itself)
     const SUMMER_TRIANGLE = {
-      'star-adventures':      { ra: 279.2347, dec: 38.7837, size: 12, label: 'Vega' },       // Vega
-      'star-about':   { ra: 310.3580, dec: 45.2803, size: 10, label: 'Deneb' },      // Deneb
-      'star-thoughts': { ra: 297.6958, dec:  8.8683, size: 11, label: 'Altair' },      // Altair
+      'star-adventures': { ra: 279.2347, dec: 38.7837, size: 12, label: 'Vega',  depth: 20 },  // Vega
+      'star-thoughts':   { ra: 297.6958, dec:  8.8683, size: 11, label: 'Altair', depth: 30 },  // Altair
+      'star-about':      { ra: 310.3580, dec: 45.2803, size: 10, label: 'Deneb',  depth: 10  },  // Deneb
     };
+
+    // Parallax depth for the background starfield canvas (px at screen edge)
+    const BG_DEPTH = 20;
+
+    // Base positions (set after projection is ready)
+    const basePositions = {};
 
     function positionStarLinks() {
       if (!window.gaiaProject) return;
@@ -87,17 +104,60 @@
         const p = window.gaiaProject(star.ra, star.dec);
         if (!p) return;
 
-        el.style.width = star.size + 'px';
+        el.style.width  = star.size + 'px';
         el.style.height = star.size + 'px';
-        // Center the element on the projected point
-        el.style.left = (p.px - star.size / 2) + 'px';
-        el.style.top  = (p.py - star.size / 2) + 'px';
+        // Center the element on the projected point (base position, no parallax offset)
+        const left = p.px - star.size / 2;
+        const top  = p.py - star.size / 2;
+        el.style.left = left + 'px';
+        el.style.top  = top  + 'px';
+        basePositions[id] = { left, top };
       });
+    }
+
+    // Smoothed mouse offset from screen center, normalized -1..1
+    let mouseNX = 0, mouseNY = 0;
+    let targetNX = 0, targetNY = 0;
+    let rafParallax = null;
+
+    document.addEventListener('mousemove', (e) => {
+      targetNX = (e.clientX / window.innerWidth  - 0.5) * 2;
+      targetNY = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (!rafParallax) rafParallax = requestAnimationFrame(applyParallax);
+    });
+
+    function applyParallax() {
+      rafParallax = null;
+
+      // Lerp toward target for smooth lag
+      const ease = 0.08;
+      mouseNX += (targetNX - mouseNX) * ease;
+      mouseNY += (targetNY - mouseNY) * ease;
+
+      // Apply to each star-link
+      Object.entries(SUMMER_TRIANGLE).forEach(([id, star]) => {
+        const el = document.getElementById(id);
+        if (!el || !basePositions[id]) return;
+        const dx = mouseNX * star.depth;
+        const dy = mouseNY * star.depth;
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+      });
+
+      // Shift the starfield container slightly (it's oversized to avoid edge gaps)
+      const starfield = document.querySelector('.starfield');
+      if (starfield) {
+        starfield.style.transform = `translate(${-mouseNX * BG_DEPTH}px, ${-mouseNY * BG_DEPTH}px)`;
+      }
+
+      // Keep animating while easing
+      if (Math.abs(targetNX - mouseNX) > 0.001 || Math.abs(targetNY - mouseNY) > 0.001) {
+        rafParallax = requestAnimationFrame(applyParallax);
+      }
     }
 
     // Position once the starfield projection is ready
     window.addEventListener('starfield-ready', positionStarLinks);
-    window.addEventListener('resize', positionStarLinks);
+    window.addEventListener('resize', () => { positionStarLinks(); });
     // Also try immediately in case starfield loaded first
     positionStarLinks();
   </script>

@@ -303,14 +303,14 @@ sun.userData.URL = "/"
 globeGroup.add(sun);
 
 const atmosphere = new THREE.Mesh(
-  new THREE.SphereGeometry(GLOBE_RADIUS * 1.01, 64, 64),
+  new THREE.SphereGeometry(GLOBE_RADIUS * 1.015, 64, 64),
   new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,
     uniforms: {
       color: { value: new THREE.Color(0x6b93d6)},
-      densityCenter: { value: 0.20 },
-      densityEdge:   { value: 0.50 },
+      densityCenter: { value: 0.10 },
+      densityEdge:   { value: 0.6 },
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
