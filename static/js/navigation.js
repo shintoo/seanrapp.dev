@@ -112,7 +112,7 @@ const initSPANavigation = () => {
     if (!isHome) {
       loadPage(e.state.url)
     } else {
-      loadHomePage();
+      loadPage('/index.html');
     }
   });
 

@@ -7,53 +7,201 @@
   <script src="../static/js/starfield.js"></script>
   <script src="../static/js/navigation.js"></script>
   <script src="../static/js/utils.js"></script>
+  <style>
+    .bio {
+      display: flex;
+      flex-direction: column;
+      margin: 5em;
+      line-height: 1.5;
+      font-size: 16px;
+      min-width: max(50vw, 700px);
+      background: white;
+      color: black;
+      padding: 32px 120px;
+    }
+
+    .pfp {
+      height: 256px;
+      align-self: center;
+      border-radius: 100%;
+      border: 4px solid white;
+      box-shadow: 2px 2px 5px 0 #0005;
+    }
+
+    .bio li {
+      margin-top: 1em;
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .gallery {
+      display: flex;
+      margin: 16px;
+      max-height: 256px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .gallery img {
+      margin: 0 8px;
+      height: 128px;
+      max-width: 256px;
+    }
+
+    .preview-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: white;
+      border: 3px solid white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      padding: 12px;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .preview-wrapper img {
+      max-width: 512px;
+      max-height: 512px;
+      display: block;
+    }
+
+    .preview-wrapper .caption {
+      margin-top: 8px;
+      font-size: 18px;
+      color: black;
+      text-align: center;
+      max-width: 512px;
+    }
+
+    .about-this-site {
+      background: #00000006;
+      border-radius: 10px;
+      margin: 1em;
+      padding: 1em;
+    }
+
+    @media (max-width: 798px) {
+      .bio {
+        margin: 1em;
+        max-width: 80%;
+        max-width: unset;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <div class="main">
-    <p>
-      Hullo, I am Sean.
-    </p>
-    <p>
-      I really like:
+    <div class="bio">
+    <img src="/static/img/bio/pfp.jpg" class="pfp" />
+    <p style="text-indent: 0">
+     Hullooooooo. My name is Sean :-) Thanks for visiting my super cool site. To introduce myself:
     </p>
     <ul>
-      <li>animals (esp birds for their accessibly apparent diversity),</li>
-      <li>TRAINS,</li>
-      <li>Japanese language (esp kanji paleography),</li>
-      <li>space/astronomy (fictional (ds9 and recently SGA), and real
-        (orion/sls, iss, hst, jwst)),</li>
-      <li>music (I play drums/piano/guitar/ukulele to varying degrees of skill level
-        (mostly not good)) (but also just really like listening to music),</li>
-      <li>and video games :~)</li>
+      <li>I live in the DMV (this means the Washington, D.C. metro area for all those that are not in the DMV ;)</li>
+      <li>I am an absolute fan of many things, but two of the most prominent (maybe?) are <strong>nature</strong> and <strong>space</strong>.
+      To me, though, those are two ways of referring to the same thing. Within those, I am particularly fond of birds, microscopy, ethology (animal behavior),
+      and exoplanets.
+      </li>
+
+      <li>I also really enjoy trains. In the US, I for some reason quite like MARC commuter trains pulled by an SC-44, and of course I am a big fan of Brightline
+        in Florida, SunRail in Orlando, and the DC Metro. There are way too many trains in Japan that I absolutely love to have a favorite, though, but some that
+        need to be mentioned are the Yurikamome, Tokyo Monorail, the Chuo-Soubu line, and the Hakone Tozan Tetsudo.
+      <div class="gallery">
+        <img src="/static/img/bio/yrkm.jpg" data-caption="Yurikamome 7500 series arriving at Shiodome station in Minato-ku, Tokyo. October 20, 2024" />
+        <img src="/static/img/bio/alc42.jpg" data-caption="Capitol Limited ALC-42 arriving at Harper's Ferry, WV. October 30, 2023" />
+        <img src="/static/img/bio/acelang.jpg" data-caption="Next Gen Acela passing through Halethorpe, MD. September 3, 2025" />
+        <img src="/static/img/bio/asks.jpg" data-caption="Tobu Skytree Line 10000 series arriving at Asakusa, Tokyo. October 16, 2024" />
+      </div>
+
+      </li>
+      <li>When I lived in Florida, I was quite into birding. I seem to have traded the ability to bird at any time with the ability to ride a train at any time due to now
+        living on the DC metro, but I still love them. I especially miss the nonchalance of a little blue heron waltzing their way along the shore of a small pond
+        just feet from me. Ardea and egretta are the best genera (among aves), fight me. (But yes, all birds deserve love.)</li>
+      <div class="gallery">
+        <img src="/static/img/bio/gbhe.jpg" data-caption="Great Blue Heron (Ardea herodias)" />
+        <img src="/static/img/bio/rbwo.jpg" data-caption="Red-bellied Woodpecker (Melanerpes carolinus)" />
+        <img src="/static/img/bio/trhe.jpg" data-caption="Tricolored Heron (Egretta tricolor)" />
+      </div>
+      <li>
+        I have spent many years studying Japanese language, and know almost all of my friends and my community through it. Nowadays I mostly just read books or listen
+        to podcasts every now and then, but my favorite type of rabbit hole to dive into are the intricate, nuanced histories of the evolution of individual characters
+        themselves - stories that span over thousands of years, with generations upon generations of people throughout China writing things ever so differently as
+        styles, media, and culture evolved. Each Chinese character itself is both at once a story and a system, and the absurdity of employing them in a non-Sinitic language
+        is both hilarious and forever captivating.
+      </li>
+      <li>
+        For work, I write code for the Hubble, James Webb, and Roman space telescopes at the Space Telescope Science Institute.
+        Previously, I worked in the Launch Control Center at Kennedy Space Center in Florida, doing
+        simulation software for Artemis launches.
+      </li>
     </ul>
+    <div class="about-this-site">
+      <span style="text-align: center">About this site</span>
     <p>
-      I am a software engineer at the <a target="_blank" href="https://stsci.edu">Space Telescope Science Institute</a>,
-      supporting all 3 (yes we have <a href="https://stsci.edu/roman">another
-        one comin</a>) telescopes, doing data API and web UI
-      stuff for astronomers and science data processing pipelines. I also serve as a chair of <a target="_blank"
-        href="https://sjastudy.org" a>Study Japanese in Arlington</a>, a local non-profit advocating for Japanese
-      language study and holding all sorts of events in our community :D
+      The background is rendered using data from the European Space Agency's Gaia mission, using each star's position, brightness, and color, as well as their motion
+      across the sky. Each second, 1000 years pass, and each star moves according to its current proper motion across the sky. It's only an approximation, but it
+      is running in real time as you load the site.
     </p>
     <p>
-      Before all that, I lived in Florida and did launch simulation software in the Launch Control Center at Kennedy
-      Space Center for NASA's Artemis Program, working on <a target="_blank"
-        href="https://www.nasa.gov/mission/artemis-i/">Artemis
-        I</a> and <a target="_blank" href="https://www.nasa.gov/mission/artemis-ii/">Artemis II</a>. Making spaceship
-      was very fun.
+      On the homepage, three stars are shown especially bright - these comprise the Summer Triangle - the stars Altair, Vega, and Deneb. One night in October, 2025,
+      I traveled with a group of friends to visit one of our friends that had moved a couple years prior to O'ahu. I took everyone to the north shore to the beach
+      Laniakea, as it shares a name with the <a href="https://en.wikipedia.org/wiki/Laniakea_Supercluster" target="_blank">supercluster</a> of galaxies we are a part of.
+      As the rain stopped and the clouds faded, we first saw the brightest stars of the Summer Triangle. For the rest of the night, whenever any of us spotted a star, satellite,
+      or meteor, we described its location in the sky relative to Altair, Vega, or Deneb.
     </p>
     <p>
-      Idk what I am going to use this site for tbh, I have started and abandoned several blogs/etc over the years, and
-      seeing as I have zero (0) plans to look for a new job any time soon, I don't need to waste this domain on what was
-      basically a resume. Plus I like to write little blogs and stuff every now and then, so this can be a place for
-      that.
+      On the <a href="/adventures/index.html">adventures</a> page, you can see a globe of Earth marked by my travels, and on the
+      <a href="/thoughts/index.html">thoughts</a> page, you can see a planetary system where each planet links to a blog post.
     </p>
-    <p>
-      I think having a place to put my thoughts, use up some halfcreative
-      energy, and have something to show for it will do wonders for how I spend
-      my time. ty for coming
-    </p>
+    </div>
+    </div>
   </div>
+
+  <script>
+    (function() {
+      const galleryImages = document.querySelectorAll('.gallery img');
+      let hoverPreview = null;
+
+      galleryImages.forEach(img => {
+        img.addEventListener('mouseover', function() {
+          if (!hoverPreview) {
+            hoverPreview = document.createElement('div');
+            hoverPreview.className = 'preview-wrapper';
+            hoverPreview.style.position = 'fixed';
+            document.body.appendChild(hoverPreview);
+
+            const previewImg = document.createElement('img');
+            hoverPreview.appendChild(previewImg);
+
+            const caption = document.createElement('div');
+            caption.className = 'caption';
+            hoverPreview.appendChild(caption);
+          }
+
+          const previewImg = hoverPreview.querySelector('img');
+          const caption = hoverPreview.querySelector('.caption');
+          previewImg.src = this.src;
+          caption.textContent = this.dataset.caption || '';
+        });
+
+        img.addEventListener('mousemove', function(e) {
+          if (hoverPreview) {
+            hoverPreview.style.left = (e.clientX + 15) + 'px';
+            hoverPreview.style.top = (e.clientY - 200) + 'px';
+          }
+        });
+
+        img.addEventListener('mouseout', function() {
+          if (hoverPreview) {
+            hoverPreview.remove();
+            hoverPreview = null;
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 
 </html>

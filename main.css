@@ -52,6 +52,7 @@ a:hover {
   align-items: center;
   font-style: italic;
   margin: 2rem;
+  margin-top: 30vh;
   font-size: 32px;
   letter-spacing: -1px;
   text-align: center;
@@ -63,7 +64,7 @@ a:hover {
 
 .blog-header .date {
   opacity: 0.66;
-  font-size: 28px;
+  font-size: 20px;
 }
 
 .cit {
@@ -79,7 +80,7 @@ a:hover {
   max-width: max(800px, 2vw);
   background: #fff6e4;
   color: #030201;
-  padding: 32px 120px;
+  padding: min(9vw, 32px) 120px;
   font-size: 20px;
   line-height: 27px;
   font-family: "Times New Roman", PublicoText, Georgia, "Times New Roman", Times, Baskerville;
@@ -155,6 +156,7 @@ a:hover {
   }
 
   .blog {
-    max-width: 90vw;
+    min-width: 95vw;
+    padding: 16px;
   }
 }

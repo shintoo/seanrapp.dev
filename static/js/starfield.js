@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (container.querySelector('canvas')) return;
 
   /* ── Configurable constants ─────────────────────────────── */
-  const YEARS_PER_SECOND = 700;
+  const YEARS_PER_SECOND = 1000;
   const BASE_STAR_RADIUS = 2.0;
 
   /* ── Projection center: Summer Triangle centroid ────────── */
