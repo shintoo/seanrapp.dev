@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/main.css">
   <script src="../static/js/navigation.js"></script>
@@ -83,12 +84,12 @@
     // Background canvas implicitly has depth 0 (no movement relative to itself)
     const SUMMER_TRIANGLE = {
       'star-adventures': { ra: 279.2347, dec: 38.7837, size: 12, label: 'Vega',  depth: 20 },  // Vega
-      'star-thoughts':   { ra: 297.6958, dec:  8.8683, size: 11, label: 'Altair', depth: 30 },  // Altair
-      'star-about':      { ra: 310.3580, dec: 45.2803, size: 10, label: 'Deneb',  depth: 10  },  // Deneb
+      'star-thoughts':   { ra: 297.6958, dec:  8.8683, size: 11, label: 'Altair', depth: 13 },  // Altair
+      'star-about':      { ra: 310.3580, dec: 45.2803, size: 10, label: 'Deneb',  depth: 5  },  // Deneb
     };
 
     // Parallax depth for the background starfield canvas (px at screen edge)
-    const BG_DEPTH = 20;
+    const BG_DEPTH = 2;
 
     // Base positions (set after projection is ready)
     const basePositions = {};

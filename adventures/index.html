@@ -154,6 +154,10 @@
     text-underline-offset: 3px;
   }
 
+  #modal-description p {
+    margin-top: 16px;
+  }
+
   /* Subtle page title */
   #page-title {
     position: fixed;
@@ -346,7 +350,7 @@ const INITIAL_CAM_Z = camera.position.z;
 
 function initializeGlobe() {
   DESTINATIONS.forEach((dest, i) => {
-  const pos = latLngToVec3(dest.lat, dest.lng, GLOBE_RADIUS + 0.006);
+  const pos = latLngToVec3(dest.lat, dest.lng, GLOBE_RADIUS + 0.012);
 
   // Map marker for each location
   const box = new THREE.Mesh(
@@ -429,7 +433,7 @@ window.addEventListener('pointerup', () => { isDragging = false; });
 // Scroll to zoom
 renderer.domElement.addEventListener('wheel', e => {
   e.preventDefault();
-  camera.position.z = Math.max(1.8, Math.min(6, camera.position.z + e.deltaY * 0.002));
+  camera.position.z = Math.max(1.5, Math.min(10, camera.position.z + e.deltaY * 0.002));
 }, { passive: false });
 
 // Click detection
@@ -465,8 +469,16 @@ function openModal(dest) {
     img.loading = 'lazy';
     modalGallery.appendChild(img);
   });
-  modalDescription.innerHTML = dest.description;
+  modalDescription.innerHTML = 'Loading…';
   modalOverlay.classList.add('open');
+
+  fetch(`./destinations/${dest.slug}.html`)
+    .then(r => {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    })
+    .then(html => { modalDescription.innerHTML = html; })
+    .catch(() => { modalDescription.innerHTML = ''; });
 }
 
 function closeModal() {

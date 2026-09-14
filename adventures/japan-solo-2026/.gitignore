@@ -1,0 +1,7 @@
+# Media is served from R2 (media.seanrapp.dev)
+images/
+images-web/
+voice-logs/
+voice-logs-web/
+
+cloudflare-token-vars.sh
