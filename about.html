@@ -83,10 +83,49 @@
     }
 
     @media (max-width: 798px) {
+      .main {
+        max-width: 100%;
+        width: 100%;
+      }
+
       .bio {
-        margin: 1em;
-        max-width: 80%;
-        max-width: unset;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        margin: 1em 0;
+        padding: 24px 16px;
+      }
+
+      .bio ul {
+        padding-left: 0;
+        margin-left: 0;
+      }
+
+      .pfp {
+        height: 180px;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+        margin: 16px 0;
+        max-height: none;
+      }
+
+      .gallery img {
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 120px;
+        object-fit: cover;
+      }
+
+      /* Hover previews are pointless on touch and overflow the viewport */
+      .preview-wrapper {
+        display: none;
       }
     }
   </style>
