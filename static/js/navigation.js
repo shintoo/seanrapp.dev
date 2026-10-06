@@ -64,7 +64,42 @@ const loadPage = async (url) => {
   }
 };
 
+// Inside the 3D homepage's reading panel (an iframe): skip the SPA shell, and hand
+// site links up to the parent page so it can fly the camera there instead
+const isEmbedded = window.self !== window.top;
+// Set right away (this script loads in <head>) so the page never flashes its own background
+if (isEmbedded) document.documentElement.classList.add('embedded');
+
+const initEmbedded = () => {
+  const main = document.querySelector('.main');
+  if (main) main.style.opacity = '1';
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href]');
+    if (!link || link.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const href = link.getAttribute('href');
+    if (href.startsWith('#')) return;
+    const url = new URL(href, window.location.href);
+    e.preventDefault();
+    if (url.origin === window.location.origin) {
+      window.parent.postMessage({ type: 'site-nav', path: url.pathname }, window.location.origin);
+    } else {
+      window.top.location.href = url.href;
+    }
+  }, true);
+
+  // Escape never reaches the parent page from in here, so pass it along
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') window.parent.postMessage({ type: 'close' }, window.location.origin);
+  });
+};
+
 const initSPANavigation = () => {
+  if (isEmbedded) {
+    initEmbedded();
+    return;
+  }
+
   const currentPath = window.location.pathname;
   const isHomePath = !currentPath || currentPath === '/' || currentPath === '/index.html';
 
