@@ -5,7 +5,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/main.css">
-  <script src="../static/js/navigation.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -13,33 +12,35 @@
       background: #000;
       width: 100vw;
       height: 100vh;
+      overflow: hidden;
     }
 
-    /* Extend the starfield slightly beyond the viewport so parallax
-       shifts never reveal a black gap at the edges. */
-    .starfield {
-      inset: -10px !important;
-      width: calc(100% + 20px) !important;
-      height: calc(100% + 20px) !important;
+    #space {
+      position: fixed;
+      inset: 0;
+      display: block;
     }
 
+    /* Invisible hit targets that follow the three bright stars on screen */
     .star-link {
       position: fixed;
+      left: 0;
+      top: 0;
+      width: 36px;
+      height: 36px;
+      margin: -18px 0 0 -18px;
       border-radius: 50%;
-      background: white;
       cursor: pointer;
       display: block;
-      pointer-events: auto;
-      z-index: 10000;
-      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
-      transition: box-shadow 0.8s ease;
+      z-index: 10;
+      will-change: transform;
     }
 
     .star-link .tooltip {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: calc(100% + 8px);
+      bottom: calc(100% + 4px);
       color: white;
       font-family: monospace;
       font-size: 12px;
@@ -51,116 +52,259 @@
       padding: 8px;
     }
 
-    .star-link:hover .tooltip {
+    .star-link:hover .tooltip,
+    .star-link:focus-visible .tooltip {
       opacity: 1;
     }
 
-    .star-link:hover {
-      box-shadow: 0 0 16px 5px rgba(255, 255, 255, 0.75);
+    /* Shared hover label for markers and planets */
+    #hover-label {
+      position: fixed;
+      z-index: 10;
+      pointer-events: none;
+      font-family: monospace;
+      font-size: 12px;
+      color: white;
+      padding: 8px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+      border: 1px solid white;
+      background: black;
+    }
+
+    #hover-label.visible { opacity: 1; }
+
+    /* Gallery previews from the about page, drawn here so they can extend past the panel */
+    #preview {
+      position: fixed;
+      z-index: 60;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      background: white;
+      padding: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+
+    #preview.visible { display: flex; }
+
+    #preview img {
+      max-width: 512px;
+      max-height: 512px;
+      display: block;
+    }
+
+    #preview-caption {
+      margin-top: 8px;
+      max-width: 512px;
+      font-family: "Times New Roman";
+      font-size: 18px;
+      color: black;
+      text-align: center;
+    }
+
+    .year { opacity: 0.5; }
+
+    /* Destination modal (adventures) */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      color: #e8e4df;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    #modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #modal {
+      background: black;
+      border: 1px solid white;
+      max-width: 680px;
+      width: 92vw;
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.35s ease;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(232,228,223,0.15) transparent;
+    }
+
+    #modal-overlay.open #modal { transform: translateY(0) scale(1); }
+
+    #modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      z-index: 5;
+      margin: 16px 16px 0 0;
+      color: white;
+      background: black;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+    }
+
+    #modal-title {
+      font-family: monospace;
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 40px 36px 8px;
+      line-height: 1.2;
+    }
+
+    #modal-gallery {
+      display: flex;
+      gap: 8px;
+      padding: 20px 36px 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    #modal-gallery::-webkit-scrollbar { display: none; }
+
+    #modal-gallery img {
+      height: 220px;
+      min-width: 160px;
+      object-fit: cover;
+      border-radius: 4px;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      border: 1px solid rgba(232, 228, 223, 0.08);
+    }
+
+    #modal-description {
+      padding: 20px 36px 36px;
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(232,228,223,0.8);
+    }
+
+    #modal-description a {
+      color: #e8e4df;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    #modal-description p { margin-top: 16px; }
+
+    /* Reading panel (about page and blog posts), docked right on wide screens */
+    #reader {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(60vw, 900px);
+      z-index: 50;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-left: 1px solid rgba(255, 255, 255, 0.25);
+      transform: translateX(100%);
+      visibility: hidden;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s 0.6s;
+    }
+
+    #reader.open {
+      transform: translateX(0);
+      visibility: visible;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+    }
+
+    #reader-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: transparent;
+    }
+
+    #reader-close {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 1;
+      width: 36px;
+      height: 36px;
+      color: white;
+      background: black;
+      border: 1px solid white;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 798px) {
+      #reader {
+        width: 100%;
+        border-left: 0;
+        background: rgba(0, 0, 0, 0.6);
+      }
+
+      #reader-close { display: block; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #reader, #reader.open { transition: none; }
     }
   </style>
-
 </head>
 
 <body>
-  <div class="starfield" id="starfield">
-  </div>
-  <div class="main"></div>
+  <canvas id="space"></canvas>
 
-  <a class="star-link" href="/about.html" id="star-about">
-    <span class="tooltip">about</span>
-  </a>
-  <a class="star-link nav-link" href="/thoughts/index.html" id="star-thoughts">
-    <span class="tooltip">thoughts</span>
-  </a>
   <a class="star-link" href="/adventures/index.html" id="star-adventures">
     <span class="tooltip">adventures</span>
   </a>
+  <a class="star-link" href="/thoughts/index.html" id="star-thoughts">
+    <span class="tooltip">thoughts</span>
+  </a>
+  <a class="star-link" href="/about.html" id="star-about">
+    <span class="tooltip">about</span>
+  </a>
 
-  <script src="/static/js/starfield.js"></script>
-  <script>
-    // Real coordinates of the Summer Triangle stars
-    // depth: parallax strength — higher = appears closer = more mouse movement
-    // Background canvas implicitly has depth 0 (no movement relative to itself)
-    const SUMMER_TRIANGLE = {
-      'star-adventures': { ra: 279.2347, dec: 38.7837, size: 12, label: 'Vega',  depth: 20 },  // Vega
-      'star-thoughts':   { ra: 297.6958, dec:  8.8683, size: 11, label: 'Altair', depth: 13 },  // Altair
-      'star-about':      { ra: 310.3580, dec: 45.2803, size: 10, label: 'Deneb',  depth: 5  },  // Deneb
-    };
+  <div id="hover-label"></div>
+  <div id="preview"><img alt=""><div id="preview-caption"></div></div>
+  <aside id="reader" aria-hidden="true">
+    <button id="reader-close" aria-label="Close">×</button>
+    <iframe id="reader-frame" title="Reading panel"></iframe>
+  </aside>
+  <div id="modal-overlay">
+    <div id="modal">
+      <button id="modal-close">×</button>
+      <div id="modal-title"></div>
+      <div id="modal-gallery"></div>
+      <div id="modal-description"></div>
+    </div>
+  </div>
 
-    // Parallax depth for the background starfield canvas (px at screen edge)
-    const BG_DEPTH = 2;
-
-    // Base positions (set after projection is ready)
-    const basePositions = {};
-
-    function positionStarLinks() {
-      if (!window.gaiaProject) return;
-
-      Object.entries(SUMMER_TRIANGLE).forEach(([id, star]) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-
-        const p = window.gaiaProject(star.ra, star.dec);
-        if (!p) return;
-
-        el.style.width  = star.size + 'px';
-        el.style.height = star.size + 'px';
-        // Center the element on the projected point (base position, no parallax offset)
-        const left = p.px - star.size / 2;
-        const top  = p.py - star.size / 2;
-        el.style.left = left + 'px';
-        el.style.top  = top  + 'px';
-        basePositions[id] = { left, top };
-      });
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
     }
-
-    // Smoothed mouse offset from screen center, normalized -1..1
-    let mouseNX = 0, mouseNY = 0;
-    let targetNX = 0, targetNY = 0;
-    let rafParallax = null;
-
-    document.addEventListener('mousemove', (e) => {
-      targetNX = (e.clientX / window.innerWidth  - 0.5) * 2;
-      targetNY = (e.clientY / window.innerHeight - 0.5) * 2;
-      if (!rafParallax) rafParallax = requestAnimationFrame(applyParallax);
-    });
-
-    function applyParallax() {
-      rafParallax = null;
-
-      // Lerp toward target for smooth lag
-      const ease = 0.08;
-      mouseNX += (targetNX - mouseNX) * ease;
-      mouseNY += (targetNY - mouseNY) * ease;
-
-      // Apply to each star-link
-      Object.entries(SUMMER_TRIANGLE).forEach(([id, star]) => {
-        const el = document.getElementById(id);
-        if (!el || !basePositions[id]) return;
-        const dx = mouseNX * star.depth;
-        const dy = mouseNY * star.depth;
-        el.style.transform = `translate(${dx}px, ${dy}px)`;
-      });
-
-      // Shift the starfield container slightly (it's oversized to avoid edge gaps)
-      const starfield = document.querySelector('.starfield');
-      if (starfield) {
-        starfield.style.transform = `translate(${-mouseNX * BG_DEPTH}px, ${-mouseNY * BG_DEPTH}px)`;
-      }
-
-      // Keep animating while easing
-      if (Math.abs(targetNX - mouseNX) > 0.001 || Math.abs(targetNY - mouseNY) > 0.001) {
-        rafParallax = requestAnimationFrame(applyParallax);
-      }
-    }
-
-    // Position once the starfield projection is ready
-    window.addEventListener('starfield-ready', positionStarLinks);
-    window.addEventListener('resize', () => { positionStarLinks(); });
-    // Also try immediately in case starfield loaded first
-    positionStarLinks();
+  }
   </script>
+  <script type="module" src="/static/js/home/main.js"></script>
 </body>
 
 </html>
