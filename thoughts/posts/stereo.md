@@ -1,0 +1,46 @@
+---
+title: Stereoscopy and other visual curiosities
+date: 2024-12-13
+color: #efcabe
+size: 14
+---
+
+Remember when the rumors of the 3DS came out, a million moons ago?
+
+My friend Josh in middle school band told me that *it would have 3D without glasses.* I had no idea how the flip that would work, and all my 12-year old brain could imagine was a cube with screens on all sides, which makes absolutely zero (0) sense. Either way, it sounded like the coolest, of-course-Nintendo-would-do-something-so-crazy, but-no-way-that-rumor-is-true-because-how-would-that-even-work thing I had ever heard. And hilariously enough, for as hyped as I was for it, I dropped Pokemon before the 3DS actually came out and didn't end up getting one until 5 years later (~2015). I am one of the lucky ones that can play with the 3D slider all the way up all day and not get any kind of headache or whatever. I mostly played MK7 (mario kart seven (7)), 3D Land, and a bit of Omega Ruby.
+
+![](/static/img/parallax-barrier.png){.dark}
+
+The 3DS uses a thing called a [parallax barrier](https://en.wikipedia.org/wiki/Parallax_barrier) to block the pixels intended for the left eye from the right eye's view and vice versa, which works wonderfully (for most), but what if you wanted to view 3D on your usual phone/computer screen? Or make your own 3D image? This is completely doable with techniques such as *parallel view* and *cross view*. Instead of looking at one place in 3D space where two interlaced images are displayed (a la 3DS via parallax barrier), we can use our eyes in such a way that they are looking at two different images, in two different places on our screen. A normal screen with no 3D specific technology. When using the parallel view technique, this means your right eye will look at an image on the right, and your left eye will look at an image on the left. Likewise with cross view, your right eye will look at an image on the left, and your left eye will look at an image on the right. (I like parallel view better, far less strain on the eyes, but sometimes cross view is more crisp. You can always convert the image from one to the other by swapping them). The result is that the two images converge into one when your brain reconciles the two different views of each eye, and actual physical depth is perceived, as if you were peering into a real 3D scene.
+
+> When using something like a ViewMaster, a 3DS, a VR headset, or even 2D glasses, your eyes are forced to see only the image intended for that particular eye. With the parallel view or cross view, you are manually directing each eye to the intended image.
+
+The images can be taken with a camera at two different locations, or ideally, two identical cameras next to each other taking a photo at the same time. Also very fun is 3D art rather than photos (whether making two 2D drawings with different perspectives, or creating a 3D model/scene and rendering it twice with the camera in two different places.)
+
+![](/static/img/stereo/animal-cross.png)
+
+The above pair of images are from a 3DS screenshot of Animal Crossing, with the left eye's image on the left, and the right eye's image on the right. With parallel view, the balloon should very much so stand out from the rest of the image, being quite farther into the foreground than the player. All of the elements in the image in fact should have a perceivable distance to them, the closest being the balloon of course, then the tree planter, player, and the background plants. Even the ground should have a sense of depth as it moves further into the distance.
+
+![](/static/img/stereo/mars-rock.png)
+
+Above is a pair of images from the Perseverance rover on Mars, taken with a pair of cameras called [MASTCAM-Z](/static/img/mastcam-z.png). While the average adult pupillary distance is about 63mm (2.5in), the distance between the two cameras of MASTCAM-Z is [24.4cm (9.6in)](https://pubs.usgs.gov/publication/70218464#:~:text=The%20two%20Mastcam-Z%20cameras%20are%20mounted%20with,stereo%20baseline), so the perspective shift between the two images is not quite what your eyes would see if you were looking at this rock irl.
+
+To do the parallel view technique, your eyes should not be converging on your screen, but some distance past the screen. The two dots above each of the images should converge to a single dot above a 3D image. It does take practice to get this down, but if you're having trouble you can try:
+
+- Look at something far away, off to the side from your screen. Then, shift your eyes back to the screen *without* <span class="note" tabindex="0">refocusing<span class="note-body">While I say "without refocusing", I really mean without reconverging your eyes such that the line of sight for each intersects at your screen. *Focusing* your eye is done by muscles inside your eye that stretch and relax the lens behind your pupil; aiming your eyes is done of course with muscles outside of your eye. You can be focused at, for example, 1 foot, while the lines of sight for your eyes simultaneously converging at 2 feet.</span></span> on the screen
+- If you're using a phone/small laptop/etc, move the screen out of the way and look at something far. Then, without refocusing your eyes, move your screen back in front of you.
+- If your screen is relatively glossy, try looking at your reflection in the screen instead of at the screen itself.
+
+A nice how-to guide for both parallel and cross view is also available on Takashi Sekitani's site, [here](https://www.stereoeye.jp/howto/) ([eng](https://www.stereoeye.jp/howto/index_e.html)).
+
+You can kindasorta get the effect by making an alternating gif of the two perspectives, but of course this isn't the same as actually perceiving the depth with your eyes like in an irl scenario, but it is still neat:
+
+![](/static/img/mars-rock.gif){.small}
+
+If you like Mars images, there are tons of stereographic image pairs from MASTCAM-Z, though they are not quite curated in such a way that it is easy to find them. You can hunt for them on [images.nasa.gov](https://mars.nasa.gov/msl/multimedia/raw-images/?order=sol+desc%2Cinstrument_sort+asc%2Csample_type_sort+asc%2C+date_taken+desc&per_page=50&page=0&mission=msl&af=MAST_LEFT%7CMAST_RIGHT%2C%2C), but Daniel Pomarède (the cosmologist) often finds and posts neat stereo pairs on his [social media](https://mastodon.social/@pomarede/113551615758758726). The astrophotographer J-P Metsavainio also has a large collection of stereoscopic works, where original 2D captures of various deep space objects have been artistically rendered stereoscopic based on available data, [here](https://astroanarchy.blogspot.com/search/label/stereo%20images).
+
+Beyond specifically space-related images, there is so much to find out there, even [parallel](https://reddit.com/r/parallelview) and [cross](https://reddit.com/r/crossview) view subreddits, with various examples.
+
+Also great fun is trying your hand at making original stereographic images, whether that be by throwing something together in your favorite image editor™ or using something like Blender to render to images. Or, even easier, when taking a photo irl (of something that is relatively still - no fluttering leaves are moving trains) - snap the first photo, and then move your camera a few inches to the left or right and take another photo. Then, put the two together side by side. If, when viewing your stereographic photo with parallel view, the depth seems completely wrong - a distant tree feels much closer than the rock right in front of you - then you have your images backwards, and simply need only to swap them. (Or, if you *prefer* cross-view, leave them as is and view the image with cross view).
+
+What's interesting though, is that when using either of these techniques, your eyes are still *focusing* (via the lens inside your eyeball) on the same plane (your screen), whereas in the real world, both parallax *and* focus give a sense of depth. Without something absurd like eye tracking and rendering blur for unfocused objects on the fly, a really lifelike sense of depth will be missing, but just getting something from parallax is pretty neat. You can also make images that have background blurring/bokeh baked in, such that the subject is in focus (e.g. a neat rock), but the background (e.g. the forest) is blurred out. This will let the stereographic image simulate depth not just via parallax, but also include the background-out-of-focus effect. Of course, then you can only really "focus" on the subject in the photo, and not any other elements, which is one of the fun parts of stereo photos.

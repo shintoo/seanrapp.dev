@@ -4,6 +4,22 @@ html, body {
   font-family: "Times New Roman";
 }
 
+/* Shown inside the 3D homepage's reading panel - let the scene show through */
+html.embedded,
+html.embedded body {
+  background: transparent;
+}
+
+html.embedded .main {
+  max-width: none;
+  height: auto;
+}
+
+/* The panel has its own close button */
+html.embedded #sun {
+  display: none;
+}
+
 p {
   text-indent: 20px;
   margin-top: 16px;

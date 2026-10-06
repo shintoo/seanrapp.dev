@@ -23,11 +23,8 @@
 
 .face-item p {
   margin: 0;
+  text-indent: 0;
   font-size: 0.9em;
-}
-
-td {
-  padding: 10px;
 }
 
 .playbutton {
