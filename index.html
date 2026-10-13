@@ -1,310 +1,135 @@
 <!DOCTYPE html>
-<html>
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: #000;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    #space {
-      position: fixed;
-      inset: 0;
-      display: block;
-    }
-
-    /* Invisible hit targets that follow the three bright stars on screen */
-    .star-link {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 36px;
-      height: 36px;
-      margin: -18px 0 0 -18px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: block;
-      z-index: 10;
-      will-change: transform;
-    }
-
-    .star-link .tooltip {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(100% + 4px);
-      color: white;
-      font-family: monospace;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
-      border: 1px solid white;
-      padding: 8px;
-    }
-
-    .star-link:hover .tooltip,
-    .star-link:focus-visible .tooltip {
-      opacity: 1;
-    }
-
-    /* Shared hover label for markers and planets */
-    #hover-label {
-      position: fixed;
-      z-index: 10;
-      pointer-events: none;
-      font-family: monospace;
-      font-size: 12px;
-      color: white;
-      padding: 8px;
-      opacity: 0;
-      transition: opacity 0.2s;
-      white-space: nowrap;
-      border: 1px solid white;
-      background: black;
-    }
-
-    #hover-label.visible { opacity: 1; }
-
-    /* Gallery previews from the about page, drawn here so they can extend past the panel */
-    #preview {
-      position: fixed;
-      z-index: 60;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      background: white;
-      padding: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      pointer-events: none;
-    }
-
-    #preview.visible { display: flex; }
-
-    #preview img {
-      max-width: 512px;
-      max-height: 512px;
-      display: block;
-    }
-
-    #preview-caption {
-      margin-top: 8px;
-      max-width: 512px;
-      font-family: "Times New Roman";
-      font-size: 18px;
-      color: black;
-      text-align: center;
-    }
-
-    .year { opacity: 0.5; }
-
-    /* Destination modal (adventures) */
-    #modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
-      color: #e8e4df;
-      font-family: 'DM Sans', sans-serif;
-    }
-
-    #modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    #modal {
-      background: black;
-      border: 1px solid white;
-      max-width: 680px;
-      width: 92vw;
-      max-height: 85vh;
-      overflow-y: auto;
-      transform: translateY(20px) scale(0.97);
-      transition: transform 0.35s ease;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(232,228,223,0.15) transparent;
-    }
-
-    #modal-overlay.open #modal { transform: translateY(0) scale(1); }
-
-    #modal-close {
-      position: sticky;
-      top: 0;
-      float: right;
-      z-index: 5;
-      margin: 16px 16px 0 0;
-      color: white;
-      background: black;
-      width: 36px;
-      height: 36px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-    }
-
-    #modal-title {
-      font-family: monospace;
-      font-size: 1rem;
-      font-weight: 400;
-      padding: 40px 36px 8px;
-      line-height: 1.2;
-    }
-
-    #modal-gallery {
-      display: flex;
-      gap: 8px;
-      padding: 20px 36px 12px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-
-    #modal-gallery::-webkit-scrollbar { display: none; }
-
-    #modal-gallery img {
-      height: 220px;
-      min-width: 160px;
-      object-fit: cover;
-      border-radius: 4px;
-      scroll-snap-align: start;
-      flex-shrink: 0;
-      border: 1px solid rgba(232, 228, 223, 0.08);
-    }
-
-    #modal-description {
-      padding: 20px 36px 36px;
-      font-size: 0.95rem;
-      font-weight: 300;
-      line-height: 1.7;
-      color: rgba(232,228,223,0.8);
-    }
-
-    #modal-description a {
-      color: #e8e4df;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    #modal-description p { margin-top: 16px; }
-
-    /* Reading panel (about page and blog posts), docked right on wide screens */
-    #reader {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: min(60vw, 900px);
-      z-index: 50;
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-left: 1px solid rgba(255, 255, 255, 0.25);
-      transform: translateX(100%);
-      visibility: hidden;
-      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s 0.6s;
-    }
-
-    #reader.open {
-      transform: translateX(0);
-      visibility: visible;
-      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
-    }
-
-    #reader-frame {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      background: transparent;
-    }
-
-    #reader-close {
-      display: none;
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      z-index: 1;
-      width: 36px;
-      height: 36px;
-      color: white;
-      background: black;
-      border: 1px solid white;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
-
-    @media (max-width: 798px) {
-      #reader {
-        width: 100%;
-        border-left: 0;
-        background: rgba(0, 0, 0, 0.6);
-      }
-
-      #reader-close { display: block; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      #reader, #reader.open { transition: none; }
-    }
-  </style>
+  <title>do something</title>
 </head>
+<style>
+.cta {
+  width: 100%;
+  text-align: center;
+  font-size: 1.5em;
+  margin-top: 1em;
+}
+.header-img {
+  width: 300px;
+  padding: 1em;
+}
+body {
+  font-family: Arial;
+  line-height: 1.3;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  background-color: #111;
+  color: #fafff5;
+}
+li {  margin-bottom: 5px; }
+ul {  padding-left: 0; }
+a {  color: #7799ea; }
+body > div {  max-width: 600px; }
+.imgc { display: flex; flex-direction: column; align-items: center; }
+.imgc .caption { padding: 0.5em 1em; color: #ccc; font-style: italic; }
+.lucille { width: 300px; height: 300px; object-fit: cover; padding: 1em; }
+
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => Array.from(document.getElementsByClassName("ref")).forEach((ref, idx) => ref.text = `[${idx+1}]`))
+</script>
 
 <body>
-  <canvas id="space"></canvas>
+  <img class="header-img" src="https://dyrevern.no/content/uploads/2019/11/iStock_000012180743XLarge-1536x1024.jpg" />
+<div>
+  <p class="intro">
+    Many years ago, I inadvertently saw what I thought was a shock video. In a factory,
+    two workers dumped a box of live baby chicks into an industrial shredder. Though it was something one cannot un-see, I did my best to.
+    I had no idea why anyone would do such a thing, beyond sickness and cruelty.
+  </p>
+  <p>
+    Turns out, they were doing their jobs. They worked at a farm that breeds hens for egg production - an industry that hatches 300 million hens each year in the US. Those baby chicks were males - they won't lay eggs, so they are waste.
+  </p>
+  <p>
+    On an egg farm, hens are killed after their egg production slows, around 1-2 years old.
+    The farm then buys new hens to replace them from a hatchery. The hatchery,  unfortunately, cannot <i>choose</i> what sex the baby chicks are born as. Half are male,
+    half are female. The hatched eggs are transferred to a conveyor belt, where workers identify
+    whether they are male or female. In some hatcheries, males are tossed to a separate conveyor belt, that leads to the shredder. In others, males are tossed into boxes, which will later be dumped into the shreddder.
+  </p>
+  <p>
+  Every single year in the US, over 300 million male baby chicks, alive, walking, <a target="_blank" href="https://www.farmtransparency.org/videos/9ff4223a9f">fall in</a>.
+  </p>
+  <p>
+    Around 7 billion chicks are killed in this way globally every year, to support egg production<sup><a class="ref" target="_blank" href="https://faunalytics.org/global-chick-culling-2019-2024"></a></sup>.
+  </p>
+  <p style="font-size: 1.2em; color: #ccc; padding: 3em 1em">
+    It is easy to look back at history, with a contemporary moral lens, and claim we would have
+    stood on the right side. How we can really know is by what we do today.
+  </p>
 
-  <a class="star-link" href="/adventures/index.html" id="star-adventures">
-    <span class="tooltip">adventures</span>
-  </a>
-  <a class="star-link" href="/thoughts/index.html" id="star-thoughts">
-    <span class="tooltip">thoughts</span>
-  </a>
-  <a class="star-link" href="/about.html" id="star-about">
-    <span class="tooltip">about</span>
-  </a>
+  <ul>
+    <li>80 billion chickens are killed annually<sup><a target="_blank" class="ref" href="https://ourworldindata.org/data-insights/billions-of-chickens-ducks-and-pigs-are-slaughtered-for-meat-every-year"></a></sup>, 8 billion in the US alone<sup><a target="_blank" class="ref" href="https://www.nass.usda.gov/Publications/Todays_Reports/reports/lsan0421.pdf"></a></sup></li>
+    <li>60-80% of amazon deforestation is for cattle ranching<sup><a class="ref" target="_blank" href="https://news.mongabay.com/2011/09/62-of-deforested-amazon-land-ends-up-as-cattle-pasture/"></a></sup></li>
+    <li>hens naturally lay 10-20 eggs per year<sup><a class="ref" href="https://www.researchgate.net/publication/316846785_Breeding_ecology_of_red_jungle_fowl_Gallus_gallus_in_Deva_Vatala_National_Park_Azad_Jammu_and_Kashmir_Pakistan"></a></sup>. on egg farms, they have been selectively bred to lay over 300 per year</li>
+    <li>over 99% of farm animals in the US are on factory farms<sup><a class="ref" target="_blank" href="https://www.sentienceinstitute.org/us-factory-farming-estimates"></a></sup></li>
+    <li>chickens in factory farms (30+ billion) are the most numerous bird on earth, and make up ~70% of all bird mass<sup><a class="ref" target="_blank" href="https://fullfact.org/environment/how-many-birds-are-chickens/"></a></sup></li>
+    <li>about 1% (90 million annually) of slaughtered chickens don't get stunned before slaughter and consciously get their throat slit while upside-down; about 500k a year of those miss the neck slit and are scaled while still alive (scalding helps remove feathers after slaughter)<sup><a class="ref" target="_blank" href="https://www.nationalchickencouncil.org/national-chicken-council-brief-on-stunning-of-chickens/"></a></sup></li>
+    <li>cows used for dairy have their babies taken from then within hours of birth (baby boy? killed for veal a few weeks later. baby girl? to become a dairy cow)<sup><a class="ref" target="_blank" href="https://veterinaryevidence.org/index.php/ve/article/download/241/319?inline=1"></a></sup></li>
+    <li>hens have their beaks cut off so they don't peck each other to death from stress, yes even on "free-range" egg farms<sup><a class="ref" href="https://www.farmtransparency.org/kb/food/turkeys/hatchery"></a></sup></li>
+    <li>hens are killed between 1 and 2 years old (egg production goes down). natural lifespan is up to 10 years<sup><a class="ref" target="_blank" href="https://kb.rspca.org.au/knowledge-base/how-are-layer-hens-farmed-in-australia/"></a></sup></li>
+    <li>~100 billion fish are killed every year. around 600 billion crustaceans<sup><a class="ref" href="https://ourworldindata.org/grapher/farmed-crustaceans"></a></sup></li>
+    <li>a cow used for dairy is killed between 4 and 6 years into her 20 year life span (she won't product as much milk after all the forced (and taken) babies)<sup><a class="ref" target="_blank" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8071937/"></a></sup></li>
+    <li>80% of global farmland is used for animal agriculture, but provides less than 20% of our calories<sup><a class="ref" target="_blank" href="https://ourworldindata.org/global-land-for-agriculture"></a></sup></li>
+    <li>cow and chicken meat production emit 20x and 3x more carbon than soy, respectively<sup><a class="ref" target="_blank" href="https://ourworldindata.org/grapher/ghg-per-protein-poore"></a></sup> (no soy doesn't upset your hormones, stop listening to joe rogan)</li>
+    <li>pigs are smarter than dogs<sup><a class="ref" target="_blank" href="https://escholarship.org/uc/item/8sx4s79c"></a></sup></li>
+    <li>pigs are suffocated via carbon dioxide gassing (painful panic inducing suffocation, not like nitrogen gassing) before being bled out<sup><a class="ref" target="_blank" href="https://icfaw.org/s/Stunning-of-pigs-with-carbon-dioxide.pdf"></a></sup></li>
+  </ul>
 
-  <div id="hover-label"></div>
-  <div id="preview"><img alt=""><div id="preview-caption"></div></div>
-  <aside id="reader" aria-hidden="true">
-    <button id="reader-close" aria-label="Close">×</button>
-    <iframe id="reader-frame" title="Reading panel"></iframe>
-  </aside>
-  <div id="modal-overlay">
-    <div id="modal">
-      <button id="modal-close">×</button>
-      <div id="modal-title"></div>
-      <div id="modal-gallery"></div>
-      <div id="modal-description"></div>
-    </div>
+  <div class="cta">do something</div>
+
+  <ul>
+    <li>don't eat beef. easy</li>
+    <li>replace chicken with tempeh - it's goated. complete protein, same price, no food borne illnesses (you can eat it straight, it's pasteurized), dumb easy to cook</li>
+    <li>replace cow's milk with plant milks - soy, oat, almond, rice. ("almond milk uses a lot of water" - not nearly as much as a cow's milk<sup><a class="ref" target="_blank" href="https://www.statista.com/chart/22659/cows-milk-plant-milk-sustainability/"></a></sup>, and do oat then. you have options, all of which are torture free)</li>
+    <li>replace honey with agave or maple syrup</li>
+    <li>no, you don't need cheese. plant-based cheese if you want (violife, daiya, and follow your heart are the best)</li>
+    <li>my pancakes are incredible<sup>(<a href="https://tasty.co/recipe/the-fluffiest-vegan-pancakes" target="_blank">recipe</a>)</sup></li>
+    <li>lots of foods you already eat are already just plants. black beans. a bagel. rice. peanut butter. corn. potatoes. pasta. edamame.</li>
+    <li>be kind to yourself.</li>
+  </ul>
+
+  <div class="cta">"but"</div>
+
+  <ul>
+    <li>"what about small local farms" systemic animal cruelty plagues local farms as well. and is that where you're getting your animal products anyway?</li>
+    <li>"what about indigenous people in food deserts that can't go plant-based?" is that who's reading this right now?</li>
+    <li>"vegetable farms destroy habitat too" 80% of farmland for vegetables is to feed the animals people eat. we would destroy far less habitat and use far less land area if we just grew food for ourselves, instead of for animals people eat</li>
+    <li>"corporations are responsible for climate change" corporations do it for their customers</li>
+    <li>"plant-based is more expensive" it's not. beans are cheaper than meat</li>
+    <li>"what about traditional and cultural value" we have moved beyond atrocious practices before (...), we can do it again. and those traditions were probably born before we killed trillions of animals every year.</li>
+    <li>"i don't have the mental capacity to wholly change my diet" i hear you. times is tough. start small. you can do it. they are counting on you. consider the mental toll of knowing what you are funding when you buy animal products. you may find some relief and respite when you abstain from funding such atrocities.</li>
+    <li>"i am scared of having a vitamin deficiency" 1) take a b12 tablet every few days 2) how often do you get your blood tested <i>now</i>?</li>
+    <li>"eating meat is natural" nothing about farming is natural, and nature is not a moral compass (thank god)</li>
+    <li>"change is done with collective action" be a part of collective action.</li>
+  </ul>
+
+  <div class="cta">happy stuff</div>
+
+  <div class="imgc">
+    <img class="lucille" src="https://rosiesfarmsanctuary.org/wp-content/uploads/2023/09/lucille.jpg" />
+    <span class="caption">Lucille, a rescued pig, at Rosie's Farm Sanctuary in Maryland. See her <a href="https://rosiesfarmsanctuary.org/animals/lucille/" target="_blank">bio</a>.</span>
   </div>
 
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
-    }
-  }
-  </script>
-  <script type="module" src="/static/js/home/main.js"></script>
-</body>
 
-</html>
+  <p>
+  Animals are absolutely wonderful. We've learned a lot of really amazing things about
+  them over the past several years. The world is just so beautiful.
+  </p>
+
+  <ul>
+    <li>Pigs were taught to operate a joystick to play a simple video game to win a treat, showing they have the capacity for understanding abstract cause-and-effect<sup><a class="ref" target="_blank" href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2021.631755/full"></a></sup>.</li>
+    <li>Honeybees succeeded in learning basic arithmetic<sup><a class="ref" href="https://www.science.org/doi/10.1126/sciadv.aav0961"></a></sup>, and symbolic representation of numbers<sup><a class="ref" target="_blank" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6571477/"></a></sup>.</li>  
+    <li>Cows get happy when they learn and solve a puzzle<sup><a class="ref" target="_blank" href="https://www.sciencedirect.com/science/article/abs/pii/S0168159103002946"></a></sup>.</li>
+    <li>A fish the size of your finger passes the mirror test, and recognizes themself in photographs<sup><a class="ref" href="https://www.nature.com/articles/s41598-025-25837-0"></a></sup></li>
+  </ul>
+</div>
+</body>
